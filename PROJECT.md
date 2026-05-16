@@ -319,8 +319,8 @@ Morbchi/
 ## Development Phases
 
 ### Phase 1 — MVP (v0.1) Pet on Your Desktop
-- [ ] Xcode project setup (macOS App target), GitHub repo init
-- [ ] NSPanel floating transparent window with draggable pet
+- [x] Xcode project setup (macOS App target), GitHub repo init
+- [x] NSPanel floating transparent window with draggable pet
 - [ ] SwiftData models: Pet, PetStats
 - [ ] Stat drain engine (background Timer/async)
 - [ ] Basic pet sprite with idle animation

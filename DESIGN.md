@@ -772,8 +772,8 @@ Morbchi/
 - [x] Floating NSPanel window (PetWindowController)
 - [x] DesktopPetView placeholder
 - [ ] Fix persistence — store ModelContext in PetViewModel, call save() after every action and every tick
-- [ ] Onboarding flow — NameInputView + PersonalityPickerView + HatchAnimationView
-- [ ] MenuBar item — MenuBarController + MenuBarPopoverView
+- [x] Onboarding flow — NameInputView + PersonalityPickerView + HatchAnimationView
+- [x] MenuBar item — MenuBarController + MenuBarPopoverView
 - [ ] Strip care actions from right-click menu (Open Room + Quit only)
 - [ ] Real pet sprite replacing emoji placeholder
 
