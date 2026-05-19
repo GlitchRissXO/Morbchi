@@ -2,7 +2,8 @@ import Foundation
 import SwiftData
 
 @Model
-final class Pet {
+final class Pet
+{
     var name: String
     var personality: Personality
     var lifeStage: LifeStage
@@ -14,7 +15,8 @@ final class Pet {
 
     @Relationship(deleteRule: .cascade) var stats: PetStats?
 
-    init(name: String, personality: Personality) {
+    init(name: String, personality: Personality)
+    {
         self.name = name
         self.personality = personality
         self.lifeStage = .egg
@@ -26,7 +28,8 @@ final class Pet {
     }
 }
 
-enum Personality: String, Codable, CaseIterable {
+enum Personality: String, Codable, CaseIterable
+{
     case mischievous = "Mischievous"
     case gentle      = "Gentle"
     case sage        = "Sage"
@@ -34,7 +37,8 @@ enum Personality: String, Codable, CaseIterable {
     case dramatic    = "Dramatic"
 }
 
-enum LifeStage: String, Codable, CaseIterable {
+enum LifeStage: String, Codable, CaseIterable
+{
     case egg      = "Egg"
     case sprout   = "Sprout"
     case wisp     = "Wisp"

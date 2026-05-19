@@ -5,15 +5,19 @@ import SwiftUI
 struct DesktopPetView: View {
     @ObservedObject var viewModel: PetViewModel
 
-    var body: some View {
-        ZStack {
+    var body: some View
+    {
+        ZStack
+        {
             // Placeholder sprite — replace with actual pet artwork
-            VStack(spacing: Theme.Spacing.xs) {
+            VStack(spacing: Theme.Spacing.xs)
+            {
                 Text(moodEmoji)
                     .font(.system(size: 64))
                     .shadow(color: Theme.Color.accentCool.opacity(0.6), radius: 12)
 
-                if let mood = viewModel.stats?.mood {
+                if let mood = viewModel.stats?.mood
+                {
                     Text(mood.displayName)
                         .font(Theme.Font.flavor(11))
                         .foregroundStyle(Theme.Color.textMuted)
@@ -26,7 +30,8 @@ struct DesktopPetView: View {
     }
 
     private var moodEmoji: String {
-        switch viewModel.stats?.mood {
+        switch viewModel.stats?.mood
+        {
         case .happy:    return "🌙"
         case .excited:  return "✨"
         case .sleepy:   return "💤"
@@ -44,7 +49,8 @@ struct DesktopPetView: View {
     }
 
     @ViewBuilder
-    private var contextMenuItems: some View {
+    private var contextMenuItems: some View
+    {
         Button("Feed")  { viewModel.feed() }
         Button("Pet")   { viewModel.cuddle() }
         Button("Bathe") { viewModel.bathe() }

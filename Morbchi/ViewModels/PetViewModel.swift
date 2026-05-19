@@ -3,45 +3,52 @@ import SwiftData
 import Combine
 
 @MainActor
-final class PetViewModel: ObservableObject {
+final class PetViewModel: ObservableObject
+{
     @Published var pet: Pet?
     @Published var stats: PetStats?
 
     private let engine = PetEngine.shared
 
-    func load(from context: ModelContext) {
+    func load(from context: ModelContext)
+    {
         let descriptor = FetchDescriptor<Pet>()
         pet = try? context.fetch(descriptor).first
         stats = pet?.stats
 
-        if let stats {
+        if let stats
+        {
             engine.start(for: stats)
         }
     }
 
     // MARK: - Care Actions
 
-    func feed(amount: Double = 20) {
+    func feed(amount: Double = 20)
+    {
         guard let stats else { return }
         stats.set(\.hunger, to: stats.hunger + amount)
         stats.set(\.happiness, to: stats.happiness + 5)
         addXP(5)
     }
 
-    func bathe() {
+    func bathe()
+    {
         guard let stats else { return }
         stats.set(\.cleanliness, to: 100)
         stats.set(\.happiness, to: stats.happiness + 5)
         addXP(5)
     }
 
-    func sleep() {
+    func sleep()
+    {
         guard let stats else { return }
         stats.set(\.energy, to: 100)
         addXP(3)
     }
 
-    func cuddle() {
+    func cuddle()
+    {
         guard let stats else { return }
         stats.set(\.happiness, to: stats.happiness + 10)
         stats.set(\.social, to: stats.social + 10)
@@ -50,17 +57,20 @@ final class PetViewModel: ObservableObject {
 
     // MARK: - Progression
 
-    private func addXP(_ amount: Int) {
+    private func addXP(_ amount: Int)
+    {
         guard let pet else { return }
         pet.xp += amount
         pet.lastInteractedAt = .now
         checkLevelUp()
     }
 
-    private func checkLevelUp() {
+    private func checkLevelUp()
+    {
         guard let pet else { return }
         let xpNeeded = pet.level * 100
-        if pet.xp >= xpNeeded {
+        if pet.xp >= xpNeeded
+        {
             pet.xp -= xpNeeded
             pet.level += 1
             stats?.set(\.magic, to: (stats?.magic ?? 0) + 5)

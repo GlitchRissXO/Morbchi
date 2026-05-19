@@ -3,18 +3,19 @@ import SwiftUI
 import SwiftData
 
 // Creates and manages the floating, transparent, click-through-background pet window.
-final class PetWindowController: NSWindowController {
+final class PetWindowController: NSWindowController
+{
     private let viewModel: PetViewModel
 
-    init(viewModel: PetViewModel) {
+    init(viewModel: PetViewModel)
+    {
         self.viewModel = viewModel
 
         let panel = NSPanel(
             contentRect: NSRect(x: 100, y: 100, width: 120, height: 120),
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
-            defer: false
-        )
+            defer: false)
         panel.level            = .floating
         panel.isOpaque         = false
         panel.backgroundColor  = .clear
@@ -29,7 +30,8 @@ final class PetWindowController: NSWindowController {
         restorePosition()
     }
 
-    required init?(coder: NSCoder) { fatalError("not used") }
+    required init?(coder: NSCoder) { fatalError("not used")
+    }
 
     func show() {
         window?.orderFrontRegardless()
@@ -37,13 +39,16 @@ final class PetWindowController: NSWindowController {
 
     // MARK: - Position persistence
 
-    func savePosition() {
+    func savePosition()
+    {
         guard let origin = window?.frame.origin else { return }
         UserDefaults.standard.set(NSStringFromPoint(origin), forKey: "petWindowOrigin")
     }
 
-    private func restorePosition() {
-        if let saved = UserDefaults.standard.string(forKey: "petWindowOrigin") {
+    private func restorePosition()
+    {
+        if let saved = UserDefaults.standard.string(forKey: "petWindowOrigin")
+        {
             let origin = NSPointFromString(saved)
             window?.setFrameOrigin(origin)
         }
