@@ -16,22 +16,12 @@ final class PetViewModel: ObservableObject
         self.context = context
         let descriptor = FetchDescriptor<Pet>()
         pet = try? context.fetch(descriptor).first
-
-        if pet == nil
-        {
-            let newPet = Pet(name: "Morbchi", personality: .gentle)
-            let newStats = PetStats()
-            newPet.stats = newStats
-            context.insert(newPet)
-            context.insert(newStats)
-            try? context.save()
-            pet = newPet
-        }
-
         stats = pet?.stats
+
         if let stats
         {
-            engine.start(for: stats, onSave:{ [weak self] in self?.save()})
+            engine.start(for: stats, onSave: { [weak self] in
+                self?.save()})
         }
     }
 
