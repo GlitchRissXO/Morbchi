@@ -6,19 +6,32 @@ import Combine
 final class PetViewModel: ObservableObject
 {
     @Published var pet: Pet?
+    private var context: ModelContext?
     @Published var stats: PetStats?
 
     private let engine = PetEngine.shared
 
     func load(from context: ModelContext)
     {
+        self.context = context
         let descriptor = FetchDescriptor<Pet>()
         pet = try? context.fetch(descriptor).first
-        stats = pet?.stats
 
+        if pet == nil
+        {
+            let newPet = Pet(name: "Morbchi", personality: .gentle)
+            let newStats = PetStats()
+            newPet.stats = newStats
+            context.insert(newPet)
+            context.insert(newStats)
+            try? context.save()
+            pet = newPet
+        }
+
+        stats = pet?.stats
         if let stats
         {
-            engine.start(for: stats)
+            engine.start(for: stats, onSave:{ [weak self] in self?.save()})
         }
     }
 
@@ -30,6 +43,8 @@ final class PetViewModel: ObservableObject
         stats.set(\.hunger, to: stats.hunger + amount)
         stats.set(\.happiness, to: stats.happiness + 5)
         addXP(5)
+        save()
+        
     }
 
     func bathe()
@@ -38,6 +53,7 @@ final class PetViewModel: ObservableObject
         stats.set(\.cleanliness, to: 100)
         stats.set(\.happiness, to: stats.happiness + 5)
         addXP(5)
+        save()
     }
 
     func sleep()
@@ -45,6 +61,7 @@ final class PetViewModel: ObservableObject
         guard let stats else { return }
         stats.set(\.energy, to: 100)
         addXP(3)
+        save()
     }
 
     func cuddle()
@@ -53,6 +70,7 @@ final class PetViewModel: ObservableObject
         stats.set(\.happiness, to: stats.happiness + 10)
         stats.set(\.social, to: stats.social + 10)
         addXP(2)
+        save()
     }
 
     // MARK: - Progression
@@ -75,5 +93,10 @@ final class PetViewModel: ObservableObject
             pet.level += 1
             stats?.set(\.magic, to: (stats?.magic ?? 0) + 5)
         }
+    }
+    
+    private func save()
+    {
+        try? context?.save()
     }
 }

@@ -9,6 +9,7 @@ final class PetEngine: ObservableObject
     static let shared = PetEngine()
 
     private var timer: AnyCancellable?
+    private var onSave: (() -> Void)?
 
     // Drain rates per tick (per minute). Tune these during playtesting.
     private enum DrainRate
@@ -20,13 +21,15 @@ final class PetEngine: ObservableObject
         static let social:      Double = 0.25
     }
 
-    func start(for stats: PetStats)
+    func start(for stats: PetStats, onSave: @escaping () -> Void)
     {
         timer = Timer.publish(every: 60, on: .main, in: .common)
             .autoconnect()
-            .sink { [weak self] _ in
+            .sink
+            { [weak self] _ in
                 self?.tick(stats: stats)
             }
+        self.onSave = onSave
     }
 
     func stop()
@@ -43,6 +46,7 @@ final class PetEngine: ObservableObject
         stats.set(\.social,      to: stats.social      - DrainRate.social)
         stats.lastUpdated = .now
         recalculateMood(stats: stats)
+        onSave?()
     }
 
     private func recalculateMood(stats: PetStats)

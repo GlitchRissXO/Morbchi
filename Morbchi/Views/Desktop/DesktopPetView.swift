@@ -29,22 +29,23 @@ struct DesktopPetView: View {
         .contextMenu { contextMenuItems }
     }
 
-    private var moodEmoji: String {
+    private var moodEmoji: String
+    {
         switch viewModel.stats?.mood
         {
-        case .happy:    return "🌙"
-        case .excited:  return "✨"
-        case .sleepy:   return "💤"
-        case .hungry:   return "🍄"
-        case .sad:      return "🌧️"
-        case .sick:     return "🩺"
-        case .playful:  return "🦋"
-        case .curious:  return "🔮"
-        case .grumpy:   return "🌑"
-        case .lonely:   return "🕯️"
-        case .magical:  return "⭐"
-        case .ascended: return "🌟"
-        case nil:       return "🌙"
+        case .happy:    return "Happy"
+        case .excited:  return "Excited"
+        case .sleepy:   return "Sleepy"
+        case .hungry:   return "Hungry"
+        case .sad:      return "Sad"
+        case .sick:     return "Sick"
+        case .playful:  return "Playful"
+        case .curious:  return "Curious"
+        case .grumpy:   return "Grumpy"
+        case .lonely:   return "Lonely"
+        case .magical:  return "Magical"
+        case .ascended: return "Star"
+        case nil:       return "Moon"
         }
     }
 
