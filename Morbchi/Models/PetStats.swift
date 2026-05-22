@@ -39,7 +39,7 @@ final class PetStats
 
 enum Mood: String, Codable, CaseIterable {
     case happy, excited, sleepy, hungry, sad, sick
-    case playful, curious, grumpy, lonely, magical, ascended
+    case playful, curious, grumpy, magical, ascended
 
     var displayName: String { rawValue.capitalized }
 }

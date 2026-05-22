@@ -12,9 +12,10 @@ struct DesktopPetView: View {
             // Placeholder sprite — replace with actual pet artwork
             VStack(spacing: Theme.Spacing.xs)
             {
-                Text(moodEmoji)
-                    .font(.system(size: 64))
-                    .shadow(color: Theme.Color.accentCool.opacity(0.6), radius: 12)
+                Image(moodImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 120, height: 120)
 
                 if let mood = viewModel.stats?.mood
                 {
@@ -29,23 +30,22 @@ struct DesktopPetView: View {
         .contextMenu { contextMenuItems }
     }
 
-    private var moodEmoji: String
+    private var moodImage: String
     {
         switch viewModel.stats?.mood
         {
-        case .happy:    return "Happy"
-        case .excited:  return "Excited"
-        case .sleepy:   return "Sleepy"
-        case .hungry:   return "Hungry"
-        case .sad:      return "Sad"
-        case .sick:     return "Sick"
-        case .playful:  return "Playful"
-        case .curious:  return "Curious"
-        case .grumpy:   return "Grumpy"
-        case .lonely:   return "Lonely"
-        case .magical:  return "Magical"
-        case .ascended: return "Star"
-        case nil:       return "Moon"
+        case .happy:    return "pet_happy"
+        case .excited:  return "pet_excited"
+        case .sleepy:   return "pet_sleepy"
+        case .hungry:   return "pet_hungry"
+        case .sad:      return "pet_sad"
+        case .sick:     return "pet_sick"
+        case .playful:  return "pet_playful"
+        case .curious:  return "pet_curious"
+        case .grumpy:   return "pet_grumpy"
+        case .magical:  return "pet_magical"
+        case .ascended: return "pet_ascended"
+        case nil:       return "pet_idle"
         }
     }
 

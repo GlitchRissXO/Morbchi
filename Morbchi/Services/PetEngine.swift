@@ -56,7 +56,7 @@ final class PetEngine: ObservableObject
         case stats.health < 20:          stats.mood = .sick
         case stats.hunger < 20:          stats.mood = .hungry
         case stats.energy < 20:          stats.mood = .sleepy
-        case stats.social < 20:          stats.mood = .lonely
+        case stats.social < 20:          stats.mood = .sad
         case stats.happiness < 20:       stats.mood = .sad
         case stats.magic > 80:           stats.mood = .magical
         case stats.happiness > 80 && stats.energy > 60: stats.mood = .excited
