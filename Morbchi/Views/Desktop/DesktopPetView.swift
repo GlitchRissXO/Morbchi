@@ -58,6 +58,9 @@ struct DesktopPetView: View {
         Button("Sleep") { viewModel.sleep() }
         Divider()
         Button("Open Room") { /* TODO: open Room window */ }
+        Button("Open Stats") {
+            NotificationCenter.default.post(name: .openStatsWindow, object: nil)
+        }
         Button("Quit Morbchi", role: .destructive) { NSApp.terminate(nil) }
     }
 }

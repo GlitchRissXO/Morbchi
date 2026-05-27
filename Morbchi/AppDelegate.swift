@@ -8,6 +8,8 @@ class AppDelegate: NSObject, NSApplicationDelegate
     var petViewModel: PetViewModel?
     var petWindowController: PetWindowController?
     var onboardingWindow: NSWindow?
+    var menuBarController: MenuBarController?
+    var statsWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification)
     {
@@ -19,6 +21,14 @@ class AppDelegate: NSObject, NSApplicationDelegate
 
         let viewModel = PetViewModel()
         petViewModel = viewModel
+
+        // Listen for the open stats window notification from anywhere in the app
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(showStatsWindow),
+            name: .openStatsWindow,
+            object: nil
+        )
 
         if existingPet == nil {
             showOnboarding(context: context, viewModel: viewModel)
@@ -67,5 +77,39 @@ class AppDelegate: NSObject, NSApplicationDelegate
         let controller = PetWindowController(viewModel: viewModel)
         petWindowController = controller
         controller.show()
+        menuBarController = MenuBarController(viewModel: viewModel)
     }
+
+    @objc func showStatsWindow()
+    {
+        // If already open, just bring it forward
+        if let existing = statsWindow {
+            existing.makeKeyAndOrderFront(nil)
+            return
+        }
+
+        guard let viewModel = petViewModel else { return }
+
+        let view = MenuBarPopoverView(viewModel: viewModel)
+        let hosting = NSHostingView(rootView: view)
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 280, height: 420),
+            styleMask: [.titled, .closable],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "Morbchi"
+        window.contentView = hosting
+        window.isReleasedWhenClosed = false
+        window.level = .floating
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        statsWindow = window
+    }
+}
+
+extension Notification.Name
+{
+    // Posted by DesktopPetView when the user taps "Open Stats"
+    static let openStatsWindow = Notification.Name("openStatsWindow")
 }

@@ -52,7 +52,7 @@ struct WelcomeStepView: View
         VStack(spacing: 24)
         {
             Spacer()
-            Text(" Morbchi ")
+            Text("Morbchi")
                 .font(Theme.Font.heading(28))
                 .foregroundColor(Theme.Color.textPrimary)
             Text("A magical companion is waiting for you...")
@@ -156,8 +156,10 @@ struct HatchStepView: View
         VStack(spacing: 24)
         {
             Spacer()
-            Text(cracked ? "CrackedEgg" : "UncrackedEgg")
-                .font(.system(size: 80))
+            Image(cracked ? "pet_happy" : "pet_idle")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 120, height: 120)
             Text(cracked ? "They're here!" : "Your companion is ready to hatch...")
                 .font(Theme.Font.flavor(15))
                 .foregroundColor(Theme.Color.textMuted)

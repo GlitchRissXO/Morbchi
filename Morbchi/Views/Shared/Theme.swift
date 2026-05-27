@@ -11,18 +11,21 @@ enum Theme {
         static let textPrimary      = SwiftUI.Color(hex: "#F0E6FF")
         static let textMuted        = SwiftUI.Color(hex: "#8A7AA0")
         static let pop              = SwiftUI.Color(hex: "#C97B84")
+        static let sage             = SwiftUI.Color(hex: "7AAB5F")
     }
+    
+    
 
-    // MARK: - Typography
+    // Typography
     enum Font {
         static func heading(_ size: CGFloat) -> SwiftUI.Font {
-            .custom("Georgia", size: size).bold()
+            .custom("Playfair Display", size: size).bold()
         }
         static func body(_ size: CGFloat) -> SwiftUI.Font {
             .system(size: size, design: .rounded)
         }
         static func flavor(_ size: CGFloat) -> SwiftUI.Font {
-            .custom("Georgia", size: size).italic()
+            .custom("Playfair Display", size: size).italic()
         }
     }
 
