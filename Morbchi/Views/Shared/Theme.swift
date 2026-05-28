@@ -1,8 +1,10 @@
 import SwiftUI
 
-enum Theme {
+enum Theme
+{
     // MARK: - Colors
-    enum Color {
+    enum Color
+    {
         static let backgroundPanel  = SwiftUI.Color(hex: "#1A1225")
         static let surface          = SwiftUI.Color(hex: "#2D2040")
         static let accentWarm       = SwiftUI.Color(hex: "#E8A87C")
@@ -14,23 +16,22 @@ enum Theme {
         static let sage             = SwiftUI.Color(hex: "7AAB5F")
     }
     
-    
-
     // Typography
     enum Font {
         static func heading(_ size: CGFloat) -> SwiftUI.Font {
-            .custom("Playfair Display", size: size).bold()
+            .custom("PlayfairDisplay-Bold", size: size)
         }
         static func body(_ size: CGFloat) -> SwiftUI.Font {
             .system(size: size, design: .rounded)
         }
         static func flavor(_ size: CGFloat) -> SwiftUI.Font {
-            .custom("Playfair Display", size: size).italic()
+            .custom("PlayfairDisplay-Italic", size: size)
         }
     }
 
     // MARK: - Sizing
-    enum Spacing {
+    enum Spacing
+    {
         static let xs: CGFloat = 4
         static let sm: CGFloat = 8
         static let md: CGFloat = 16
@@ -39,8 +40,32 @@ enum Theme {
     }
 }
 
-extension SwiftUI.Color {
-    init(hex: String) {
+// Button Style
+struct MainButtonStyle: ButtonStyle
+{
+    func makeBody(configuration: Configuration) -> some View
+    {
+        configuration.label
+            .font(Theme.Font.heading(12))
+            .foregroundColor(Theme.Color.textPrimary)
+            .frame(maxWidth: 100, alignment: .center)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Theme.Color.surface.opacity(configuration.isPressed ? 0.7 : 1.0))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(Theme.Color.accentCool, lineWidth: 1.5)
+            )
+    }
+}
+
+extension SwiftUI.Color
+{
+    init(hex: String)
+    {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
         Scanner(string: hex).scanHexInt64(&int)
