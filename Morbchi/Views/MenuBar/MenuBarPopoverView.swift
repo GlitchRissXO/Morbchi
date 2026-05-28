@@ -40,10 +40,10 @@ struct MenuBarPopoverView: View
             // Stats — 4 rows matching the Figma StatGauge layout
             if let stats = viewModel.stats
             {
-                StatRowView(label: "Hunger", value: stats.hunger)
-                StatRowView(label: "Happy",  value: stats.happiness)
-                StatRowView(label: "Energy", value: stats.energy)
-                StatRowView(label: "Health", value: stats.health)
+                StatRowView(icon: "icon_hunger", label: "Hunger", value: stats.hunger)
+                StatRowView(icon: "icon_happy",  label: "Happy",  value: stats.happiness)
+                StatRowView(icon: "icon_energy", label: "Energy", value: stats.energy)
+                StatRowView(icon: "icon_health", label: "Health", value: stats.health)
             }
             
             // Action buttons
@@ -92,6 +92,7 @@ struct MenuBarPopoverView: View
 // A single stat row: colored square icon + label + progress bar
 struct StatRowView: View
 {
+    let icon: String   // e.g. "icon_hunger"
     let label: String  // e.g. "Hunger"
     let value: Double  // 0–100
 
@@ -99,9 +100,10 @@ struct StatRowView: View
     {
         HStack(spacing: 10)
         {
-            // Colored square icon — matches the lavender squares in Figma
-            RoundedRectangle(cornerRadius: 4)
-                .fill(Theme.Color.accentCool)
+            // Custom stat icon
+            Image(icon)
+                .resizable()
+                .scaledToFit()
                 .frame(width: 16, height: 16)
 
             // Stat name label
