@@ -52,16 +52,18 @@ struct WelcomeStepView: View
         VStack(spacing: 24)
         {
             Spacer()
-            Text("Morbchi")
-                .font(Theme.Font.heading(28))
-                .foregroundColor(Theme.Color.textPrimary)
+            Image("logo")
+                .resizable()
+                .scaledToFit()
+                .frame(maxWidth: 400)
             Text("A magical companion is waiting for you...")
                 .font(Theme.Font.flavor(15))
                 .foregroundColor(Theme.Color.textMuted)
                 .multilineTextAlignment(.center)
             Spacer()
             Button("Begin") { onNext() }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(MainButtonStyle())
+                .frame(maxWidth: .infinity)
         }
         .padding(40)
     }
@@ -78,6 +80,10 @@ struct NameStepView: View
         VStack(spacing: 24)
         {
             Spacer()
+            Image("egg")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 120, height: 120)
             Text("What shall we call them?")
                 .font(Theme.Font.heading(28))
                 .foregroundColor(Theme.Color.textPrimary)
@@ -85,8 +91,9 @@ struct NameStepView: View
                 .textFieldStyle(.roundedBorder)
                 .frame(width: 280)
             Spacer()
-            Button("Continue") { onNext()}
-                .buttonStyle(.borderedProminent)
+            Button("Continue") { onNext() }
+                .buttonStyle(MainButtonStyle())
+                .frame(maxWidth: .infinity)
                 .disabled(petName.trimmingCharacters(in: .whitespaces).isEmpty)
         }
         .padding(40)
@@ -103,6 +110,10 @@ struct PersonalityStepView: View
     {
         VStack(spacing: 24)
         {
+            Image("egg")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 80, height: 80)
             Text("Choose their nature")
                 .font(Theme.Font.heading(28))
                 .foregroundColor(Theme.Color.textPrimary)
@@ -116,7 +127,8 @@ struct PersonalityStepView: View
             }
             .padding(.horizontal)
             Button("Continue") { onNext() }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(MainButtonStyle())
+                .frame(maxWidth: .infinity)
         }
         .padding(40)
     }
@@ -156,10 +168,10 @@ struct HatchStepView: View
         VStack(spacing: 24)
         {
             Spacer()
-            Image(cracked ? "pet_happy" : "pet_idle")
+            Image(cracked ? "pet_happy" : "egg_hatching")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 120, height: 120)
+                .frame(width: 200, height: 200)
             Text(cracked ? "They're here!" : "Your companion is ready to hatch...")
                 .font(Theme.Font.flavor(15))
                 .foregroundColor(Theme.Color.textMuted)
@@ -170,7 +182,8 @@ struct HatchStepView: View
                 if cracked { onComplete() }
                 else { withAnimation { cracked = true } }
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(MainButtonStyle())
+            .frame(maxWidth: .infinity)
         }
         .padding(40)
     }
