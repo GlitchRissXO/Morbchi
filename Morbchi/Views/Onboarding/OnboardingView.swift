@@ -84,7 +84,7 @@ struct NameStepView: View
                 .resizable()
                 .scaledToFit()
                 .frame(width: 120, height: 120)
-            Text("What shall we call them?")
+            Text("What your companion’s name?")
                 .font(Theme.Font.heading(28))
                 .foregroundColor(Theme.Color.textPrimary)
             TextField("Enter a name...", text: $petName)
