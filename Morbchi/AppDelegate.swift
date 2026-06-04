@@ -40,8 +40,8 @@ class AppDelegate: NSObject, NSApplicationDelegate
 
     func showOnboarding(context: ModelContext, viewModel: PetViewModel)
     {
-        let view = OnboardingView { [weak self] name, personality in
-            let newPet = Pet(name: name, personality: personality)
+        let view = OnboardingView { [weak self] name, personality, petType in
+            let newPet = Pet(name: name, personality: personality, petType: petType)
             let newStats = PetStats()
             newPet.stats = newStats
             context.insert(newPet)
@@ -59,7 +59,7 @@ class AppDelegate: NSObject, NSApplicationDelegate
 
         let hosting = NSHostingView(rootView: view)
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 560),
+            contentRect: NSRect(x: 0, y: 0, width: 800, height: 600),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false

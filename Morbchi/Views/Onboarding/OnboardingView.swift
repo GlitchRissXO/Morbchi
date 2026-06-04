@@ -9,7 +9,7 @@ import SwiftUI
 
 enum OnboardingStep
 {
-    case welcome, name, personality, hatch
+    case welcome, pet, personality, name, hatch, meet
 }
 
 struct OnboardingView: View
@@ -17,55 +17,130 @@ struct OnboardingView: View
     @State private var step: OnboardingStep = .welcome
     @State private var petName: String = ""
     @State private var selectedPersonality: Personality = .gentle
+    @State private var selectedPetType: PetType = .cat
 
-    var onComplete: (String, Personality) -> Void
+    var onComplete: (String, Personality, PetType ) -> Void
 
     var body: some View
     {
         ZStack
         {
-            Theme.Color.surface.ignoresSafeArea()
+            // Dark background matching the Figma designs
+            Theme.Color.backgroundPanel.ignoresSafeArea()
 
             switch step
             {
             case .welcome:
-                WelcomeStepView(onNext: { step = .name })
-            case .name:
-                NameStepView(petName: $petName, onNext: { step = .personality })
+                WelcomeStepView(onNext: { step = .pet })
+            case .pet:
+                PetTypeStepView(selected: $selectedPetType, onNext: { step = .personality })
             case .personality:
-                PersonalityStepView(selected: $selectedPersonality, onNext: { step = .hatch })
+                PersonalityStepView(selected: $selectedPersonality, onNext: { step = .name })
+            case .name:
+                NameStepView(petName: $petName, onNext: { step = .hatch })
             case .hatch:
-                HatchStepView(onComplete: { onComplete(petName, selectedPersonality) })
+                HatchStepView(onNext: { step = .meet })
+            case .meet:
+                MeetStepView(petType: selectedPetType, onComplete: { onComplete(petName, selectedPersonality, selectedPetType) })
             }
         }
-        .frame(width: 480, height: 560)
+        .frame(width: 800, height: 600)
     }
 }
 
-// Welcome Onboarding
+// Welcome screen — first thing the user sees
 struct WelcomeStepView: View
 {
     var onNext: () -> Void
 
     var body: some View
     {
-        VStack(spacing: 24)
+        VStack(spacing: 20)
         {
-            Spacer()
-            Image("logo")
+            Text("Welcome to Morbchi")
+                .font(Theme.Font.heading(40))
+                .foregroundColor(Theme.Color.textPrimary)
+                .multilineTextAlignment(.center)
+            Text("Your magical companion awaits")
+                .font(Theme.Font.flavor(16))
+                .foregroundColor(Theme.Color.textMuted)
+            Image("egg")
                 .resizable()
                 .scaledToFit()
-                .frame(maxWidth: 400)
-            Text("A magical companion is waiting for you...")
-                .font(Theme.Font.flavor(15))
-                .foregroundColor(Theme.Color.textMuted)
-                .multilineTextAlignment(.center)
-            Spacer()
+                .frame(width: 180, height: 180)
+                .padding(.vertical, 24)
             Button("Begin") { onNext() }
                 .buttonStyle(MainButtonStyle())
-                .frame(maxWidth: .infinity)
+                .frame(width: 240)
         }
         .padding(40)
+    }
+}
+
+// Pet type selection
+struct PetTypeStepView: View
+{
+    @Binding var selected: PetType
+    var onNext: () -> Void
+
+    var body: some View
+    {
+        VStack(spacing: 16)
+        {
+            Spacer()
+            Text("What kind of companion do you want?")
+                .font(Theme.Font.heading(32))
+                .foregroundColor(Theme.Color.textPrimary)
+                .multilineTextAlignment(.center)
+            Text("Choose your Morbchi")
+                .font(Theme.Font.heading(18))
+                .foregroundColor(Theme.Color.textMuted)
+            Spacer()
+            // 5 pet type cards in a horizontal row
+            HStack(spacing: 16)
+            {
+                ForEach(PetType.allCases, id: \.self)
+                { petType in
+                    PetTypeCard(petType: petType, isSelected: selected == petType)
+                        .onTapGesture { selected = petType }
+                }
+            }
+            .padding(.horizontal, 40)
+            Spacer()
+            Button("Next") { onNext() }
+                .buttonStyle(MainButtonStyle())
+                .frame(width: 240)
+        }
+        .padding(40)
+    }
+}
+
+// A single pet type card showing the mystery icon
+struct PetTypeCard: View
+{
+    let petType: PetType
+    let isSelected: Bool
+
+    var body: some View
+    {
+        VStack(spacing: 12)
+        {
+            Text(petType.rawValue)
+                .font(Theme.Font.heading(16))
+                .foregroundColor(Theme.Color.textPrimary)
+            Image("pet_icon_\(petType.rawValue.lowercased())")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 80, height: 80)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(16)
+        .background(Theme.Color.surface)
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Theme.Color.accentCool, lineWidth: isSelected ? 2 : 1)
+        )
     }
 }
 
@@ -80,27 +155,38 @@ struct NameStepView: View
         VStack(spacing: 24)
         {
             Spacer()
+            Text("What your companion's name?")
+                .font(Theme.Font.heading(32))
+                .foregroundColor(Theme.Color.textPrimary)
+                .multilineTextAlignment(.center)
+            Spacer()
             Image("egg")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 120, height: 120)
-            Text("What your companion’s name?")
-                .font(Theme.Font.heading(28))
-                .foregroundColor(Theme.Color.textPrimary)
-            TextField("Enter a name...", text: $petName)
-                .textFieldStyle(.roundedBorder)
-                .frame(width: 280)
+                .frame(width: 180, height: 180)
             Spacer()
-            Button("Continue") { onNext() }
+            TextField("Enter a name", text: $petName)
+                .font(Theme.Font.flavor(16))
+                .foregroundColor(Theme.Color.textMuted)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 14)
+                .background(Theme.Color.surface)
+                .cornerRadius(12)
+                .overlay(RoundedRectangle(cornerRadius: 12)
+                    .stroke(Theme.Color.accentCool, lineWidth: 1))
+                .frame(width: 340)
+            Spacer()
+            Button("Next") { onNext() }
                 .buttonStyle(MainButtonStyle())
-                .frame(maxWidth: .infinity)
+                .frame(width: 240)
                 .disabled(petName.trimmingCharacters(in: .whitespaces).isEmpty)
         }
         .padding(40)
     }
 }
 
-// Personality Onboarding
+// Personality selection — user picks their companion's personality type
 struct PersonalityStepView: View
 {
     @Binding var selected: Personality
@@ -108,16 +194,27 @@ struct PersonalityStepView: View
 
     var body: some View
     {
-        VStack(spacing: 24)
+        VStack(spacing: 0)
         {
-            Image("egg")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 80, height: 80)
-            Text("Choose their nature")
-                .font(Theme.Font.heading(28))
+            Spacer()
+
+            // Heading
+            Text("What kind of companion are you getting?")
+                .font(Theme.Font.heading(32))
                 .foregroundColor(Theme.Color.textPrimary)
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12)
+                .multilineTextAlignment(.center)
+
+            Spacer().frame(height: 8)
+
+            // Subheading
+            Text("Choose your Morbchi's personality")
+                .font(Theme.Font.heading(18))
+                .foregroundColor(Theme.Color.textMuted)
+
+            Spacer().frame(height: 40)
+
+            // 5 personality cards in a horizontal row
+            HStack(spacing: 12)
             {
                 ForEach(Personality.allCases, id: \.self)
                 { personality in
@@ -125,15 +222,21 @@ struct PersonalityStepView: View
                         .onTapGesture { selected = personality }
                 }
             }
-            .padding(.horizontal)
-            Button("Continue") { onNext() }
+
+            Spacer().frame(height: 40)
+
+            Button("Next") { onNext() }
                 .buttonStyle(MainButtonStyle())
-                .frame(maxWidth: .infinity)
+                .frame(width: 240)
+
+            Spacer()
         }
-        .padding(40)
+        .padding(.horizontal, 32)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
+// A single personality card showing the name, description, and icon
 struct PersonalityCard: View
 {
     let personality: Personality
@@ -141,49 +244,91 @@ struct PersonalityCard: View
 
     var body: some View
     {
-        VStack(spacing: 8)
+        VStack(spacing: 6)
         {
             Text(personality.rawValue)
-                .font(Theme.Font.body(16))
+                .font(Theme.Font.heading(15))
                 .foregroundColor(Theme.Color.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+            Text(personality.description)
+                .font(Theme.Font.flavor(11))
+                .foregroundColor(Theme.Color.textMuted)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            Image("personality_\(personality.rawValue.lowercased())")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 60, height: 60)
         }
         .frame(maxWidth: .infinity)
-        .padding()
-        .background(isSelected ? Theme.Color.accentCool : Theme.Color.surface)
-        .cornerRadius(12)
+        .frame(height: 130)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 16)
+        .background(Theme.Color.surface)
+        .cornerRadius(16)
         .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Theme.Color.accentCool, lineWidth: isSelected ? 2 : 0)
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Theme.Color.accentCool, lineWidth: isSelected ? 2 : 1)
         )
     }
 }
 
-// Hatch Onboarding 
-struct HatchStepView: View
+// Meet screen — the pet has hatched, user sees them for the first time
+struct MeetStepView: View
 {
+    let petType: PetType
     var onComplete: () -> Void
-    @State private var cracked = false
 
-    var body: some View {
+    var body: some View
+    {
         VStack(spacing: 24)
         {
             Spacer()
-            Image(cracked ? "pet_happy" : "egg_hatching")
+            Text("They're here!")
+                .font(Theme.Font.heading(40))
+                .foregroundColor(Theme.Color.textPrimary)
+                .multilineTextAlignment(.center)
+            Spacer()
+            // Show the hatched version of the chosen pet type
+            Image("hatched_\(petType.rawValue.lowercased())")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 220, height: 220)
+            Spacer()
+            Button("Meet them!") { onComplete() }
+                .buttonStyle(MainButtonStyle())
+                .frame(width: 240)
+        }
+        .padding(40)
+    }
+}
+
+// Hatch Onboarding
+struct HatchStepView: View
+{
+    var onNext: () -> Void
+
+    var body: some View
+    {
+        VStack(spacing: 24)
+        {
+            Spacer()
+            Text("Your companion is hatching . . .")
+                .font(Theme.Font.heading(28))
+                .foregroundColor(Theme.Color.textPrimary)
+                .multilineTextAlignment(.center)
+            Text("Your magical companion awaits...")
+                .font(Theme.Font.flavor(15))
+                .foregroundColor(Theme.Color.textMuted)
+            Image("egg_hatching")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 200, height: 200)
-            Text(cracked ? "They're here!" : "Your companion is ready to hatch...")
-                .font(Theme.Font.flavor(15))
-                .foregroundColor(Theme.Color.textMuted)
-                .multilineTextAlignment(.center)
             Spacer()
-            Button(cracked ? "Meet Them!" : "Hatch!")
-            {
-                if cracked { onComplete() }
-                else { withAnimation { cracked = true } }
-            }
-            .buttonStyle(MainButtonStyle())
-            .frame(maxWidth: .infinity)
+            Button("Hatch") { onNext() }
+                .buttonStyle(MainButtonStyle())
+                .frame(maxWidth: .infinity)
         }
         .padding(40)
     }

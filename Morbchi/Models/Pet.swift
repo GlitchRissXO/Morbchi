@@ -6,6 +6,7 @@ final class Pet
 {
     var name: String
     var personality: Personality
+    var petType: PetType
     var lifeStage: LifeStage
     var xp: Int
     var level: Int
@@ -15,10 +16,11 @@ final class Pet
 
     @Relationship(deleteRule: .cascade) var stats: PetStats?
 
-    init(name: String, personality: Personality)
+    init(name: String, personality: Personality, petType: PetType)
     {
         self.name = name
         self.personality = personality
+        self.petType = petType
         self.lifeStage = .egg
         self.xp = 0
         self.level = 1
@@ -30,11 +32,25 @@ final class Pet
 
 enum Personality: String, Codable, CaseIterable
 {
+    // Order matches the left-to-right layout on the onboarding personality screen
     case mischievous = "Mischievous"
-    case gentle      = "Gentle"
-    case sage        = "Sage"
-    case wild        = "Wild"
     case dramatic    = "Dramatic"
+    case wild        = "Wild"
+    case sage        = "Sage"
+    case gentle      = "Gentle"
+    
+    // Description of the personality.
+        var description: String
+        {
+            switch self
+            {
+            case .mischievous: return "playful & teasing"
+            case .dramatic:    return "theatrical & bold"
+            case .wild:        return "energetic & chaotic"
+            case .sage:        return "wise & cryptic"
+            case .gentle:      return "soft & warm"
+            }
+        }
 }
 
 enum LifeStage: String, Codable, CaseIterable
@@ -50,4 +66,14 @@ enum LifeStage: String, Codable, CaseIterable
     case elder    = "Elder"
     case archmage = "Archmage"
     case ascended = "Ascended"
+}
+
+// The species of the pet, chosen during onboarding
+enum PetType: String, Codable, CaseIterable
+{
+    case rabbit = "Rabbit"
+    case cat    = "Cat"
+    case fox    = "Fox"
+    case snake  = "Snake"
+    case koala  = "Koala"
 }
