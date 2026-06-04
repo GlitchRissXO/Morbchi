@@ -5,17 +5,26 @@ import SwiftUI
 struct DesktopPetView: View {
     @ObservedObject var viewModel: PetViewModel
 
+    // Controls the idle bob animation
+    @State private var isAnimating = false
+
     var body: some View
     {
         ZStack
         {
-            // Placeholder sprite — replace with actual pet artwork
             VStack(spacing: Theme.Spacing.xs)
             {
-                Image(moodImage)
+                Image(petSprite)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 120, height: 120)
+                    // Gentle idle bob — floats up and back down on repeat
+                    .offset(y: isAnimating ? -8 : 0)
+                    .animation(
+                        .easeInOut(duration: 1.5).repeatForever(autoreverses: true),
+                        value: isAnimating
+                    )
+                    .onAppear { isAnimating = true }
 
                 if let mood = viewModel.stats?.mood
                 {
@@ -30,23 +39,12 @@ struct DesktopPetView: View {
         .contextMenu { contextMenuItems }
     }
 
-    private var moodImage: String
+    // Returns the correct sprite for the pet's type.
+    // Once mood-specific sprites are designed, this will map mood + type together.
+    private var petSprite: String
     {
-        switch viewModel.stats?.mood
-        {
-        case .happy:    return "pet_happy"
-        case .excited:  return "pet_excited"
-        case .sleepy:   return "pet_sleepy"
-        case .hungry:   return "pet_hungry"
-        case .sad:      return "pet_sad"
-        case .sick:     return "pet_sick"
-        case .playful:  return "pet_playful"
-        case .curious:  return "pet_curious"
-        case .grumpy:   return "pet_grumpy"
-        case .magical:  return "pet_magical"
-        case .ascended: return "pet_ascended"
-        case nil:       return "pet_idle"
-        }
+        let type = viewModel.pet?.petType.rawValue.lowercased() ?? "cat"
+        return "\(type)_idle"
     }
 
     @ViewBuilder
