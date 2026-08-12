@@ -7,6 +7,7 @@ final class PetViewModel: ObservableObject
 {
     @Published var pet: Pet?
     @Published var currentAction: String?
+    @Published var currentThought: String?
     private var context: ModelContext?
     @Published var stats: PetStats?
 
@@ -72,6 +73,8 @@ final class PetViewModel: ObservableObject
         save()
     }
 
+    
+    
     // MARK: - Progression
 
     private func addXP(_ amount: Int)
