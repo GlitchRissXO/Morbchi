@@ -6,6 +6,7 @@ import Combine
 final class PetViewModel: ObservableObject
 {
     @Published var pet: Pet?
+    @Published var currentAction: String?
     private var context: ModelContext?
     @Published var stats: PetStats?
 
@@ -29,6 +30,8 @@ final class PetViewModel: ObservableObject
 
     func feed(amount: Double = 20)
     {
+        currentAction = "feed"
+        Task { try? await Task.sleep(for: .seconds(2)); currentAction = nil}
         guard let stats else { return }
         stats.set(\.hunger, to: stats.hunger + amount)
         stats.set(\.happiness, to: stats.happiness + 5)
@@ -39,6 +42,8 @@ final class PetViewModel: ObservableObject
 
     func bathe()
     {
+        currentAction = "bath"
+        Task { try? await Task.sleep(for: .seconds(2)); currentAction = nil}
         guard let stats else { return }
         stats.set(\.cleanliness, to: 100)
         stats.set(\.happiness, to: stats.happiness + 5)
@@ -48,6 +53,8 @@ final class PetViewModel: ObservableObject
 
     func sleep()
     {
+        currentAction = "sleep"
+        Task { try? await Task.sleep(for: .seconds(2)); currentAction = nil}
         guard let stats else { return }
         stats.set(\.energy, to: 100)
         addXP(3)
@@ -56,6 +63,8 @@ final class PetViewModel: ObservableObject
 
     func cuddle()
     {
+        currentAction = "pet"
+        Task { try? await Task.sleep(for: .seconds(2)); currentAction = nil}
         guard let stats else { return }
         stats.set(\.happiness, to: stats.happiness + 10)
         stats.set(\.social, to: stats.social + 10)

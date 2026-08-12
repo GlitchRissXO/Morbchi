@@ -44,7 +44,8 @@ struct DesktopPetView: View {
     private var petSprite: String
     {
         let type = viewModel.pet?.petType.rawValue.lowercased() ?? "cat"
-        return "\(type)_idle"
+        let action = viewModel.currentAction ?? "idle"
+        return "\(type)_\(action)"
     }
 
     @ViewBuilder
