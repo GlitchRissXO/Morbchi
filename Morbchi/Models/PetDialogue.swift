@@ -15,7 +15,7 @@ struct PetDialogue
         {
         //Hunger
         case (.hunger, .mischievous):
-            return "if I don't eat soon i'm chewing your cables..."
+            return "If I don't eat soon i'm chewing your cables..."
         case (.hunger, .dramatic):
             return "I am WASTING AWAYYYY. Sustenance. Now."
         case (.hunger, .wild):
@@ -31,7 +31,7 @@ struct PetDialogue
         case (.energy, .dramatic):
             return "YAWNNN...I am utterly EXHAUSTED. I must rest immediately."
         case (.energy, .wild):
-            return "can't... stop... moving... okay maybe just a tiny nap."
+            return "Can't... stop... moving... okay maybe just a tiny nap."
         case (.energy, .sage):
             return "Even the stars must rest before they shine again..."
         case (.energy, .gentle):

@@ -73,6 +73,32 @@ final class PetViewModel: ObservableObject
         save()
     }
 
+    // Thoughts for low stats.
+    func checkAndShowThought()
+    {
+        guard let stats, let pet else { return }
+        
+        if stats.hunger < 50
+        {
+            currentThought = PetDialogue.message(for: .hunger, personality: pet.personality)
+        }
+        else if stats.energy < 50
+        {
+            currentThought = PetDialogue.message(for: .energy, personality: pet.personality)
+        }
+        else if stats.happiness < 50
+        {
+            currentThought = PetDialogue.message(for: .happiness, personality: pet.personality)
+        }
+        else if stats.cleanliness < 50
+        {
+            currentThought = PetDialogue.message(for: .cleanliness, personality: pet.personality)
+        }
+        else
+        {
+            currentThought = nil
+        }
+    }
     
     
     // MARK: - Progression
@@ -99,6 +125,7 @@ final class PetViewModel: ObservableObject
     
     private func save()
     {
+        checkAndShowThought()
         try? context?.save()
     }
 }

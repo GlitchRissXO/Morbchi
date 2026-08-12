@@ -14,16 +14,19 @@ struct DesktopPetView: View {
         {
             VStack(spacing: Theme.Spacing.xs)
             {
+                if let thought = viewModel.currentThought
+                {
+                    ThoughtBubbleView(text: thought)
+                }
+                
                 Image(petSprite)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 120, height: 120)
-                    // Gentle idle bob — floats up and back down on repeat
+                
+                    // Gentle idle bob. Floats up and back down on repeat
                     .offset(y: isAnimating ? -8 : 0)
-                    .animation(
-                        .easeInOut(duration: 1.5).repeatForever(autoreverses: true),
-                        value: isAnimating
-                    )
+                    .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true),value: isAnimating)
                     .onAppear { isAnimating = true }
 
                 if let mood = viewModel.stats?.mood
@@ -33,6 +36,7 @@ struct DesktopPetView: View {
                         .foregroundStyle(Theme.Color.textMuted)
                 }
             }
+            .frame(maxWidth: .infinity)
             .padding(Theme.Spacing.sm)
         }
         .background(Color.clear)

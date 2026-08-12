@@ -7,12 +7,14 @@ struct ThoughtBubbleView: View
     
     var body: some View
     {
-        VStack(spacing: 4)
+        VStack(spacing: 8)
         {
             Text(text)
                 .font(Theme.Font.flavor(14))
                 .foregroundColor(.white)
                 .italic()
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
                 .background(
@@ -23,8 +25,10 @@ struct ThoughtBubbleView: View
                             .stroke(Theme.Color.accentCool, lineWidth: 1.5)))
             Triangle()
                 .fill(Theme.Color.backgroundPanel)
-                .frame(width: 20, height: 14)
+                .overlay(Triangle().stroke(Theme.Color.accentCool, lineWidth: 1.5))
+                .frame(width: 14, height: 20)
         }
+        .frame(maxWidth: 300)
     }
 }
 
@@ -34,7 +38,7 @@ struct Triangle: Shape
     func path(in rect: CGRect) -> Path
     {
         var path = Path()
-        path.move(to: CGPoint(x: rect.midX, y: rect.maxY))
+        path.move(to: CGPoint(x: rect.maxX * 0.75, y: rect.maxY))
         path.addLine(to: CGPoint(x: rect.minX, y: rect.minY))
         path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
         path.closeSubpath()
