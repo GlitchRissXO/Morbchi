@@ -307,8 +307,8 @@ struct MeetStepView: View
 // Hatch Onboarding
 struct HatchStepView: View
 {
+    @State private var isShaking = false
     var onNext: () -> Void
-
     var body: some View
     {
         VStack(spacing: 24)
@@ -325,6 +325,9 @@ struct HatchStepView: View
                 .resizable()
                 .scaledToFit()
                 .frame(width: 200, height: 200)
+                .rotationEffect(.degrees(isShaking ? 5: -5))
+                .animation(.easeInOut(duration: 0.15).repeatForever(autoreverses: true), value: isShaking)
+                .onAppear{ isShaking = true}
             Spacer()
             Button("Hatch") { onNext() }
                 .buttonStyle(MainButtonStyle())
