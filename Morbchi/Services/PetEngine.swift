@@ -14,16 +14,16 @@ final class PetEngine: ObservableObject
     // Drain rates per tick (per minute). Tune these during playtesting.
     private enum DrainRate
     {
-        static let hunger:      Double = 0.5
-        static let happiness:   Double = 0.3
-        static let energy:      Double = 0.2
-        static let cleanliness: Double = 0.15
-        static let social:      Double = 0.25
+        static let hunger:      Double = 2.0
+        static let happiness:   Double = 1.5
+        static let energy:      Double = 1.0
+        static let cleanliness: Double = 0.5
+        static let social:      Double = 1.0
     }
 
     func start(for stats: PetStats, onSave: @escaping () -> Void)
     {
-        timer = Timer.publish(every: 60, on: .main, in: .common)
+        timer = Timer.publish(every: 30, on: .main, in: .common)
             .autoconnect()
             .sink
             { [weak self] _ in
