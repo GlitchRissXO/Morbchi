@@ -78,19 +78,19 @@ final class PetViewModel: ObservableObject
     {
         guard let stats, let pet else { return }
         
-        if stats.hunger < 50
+        if stats.hunger < 80
         {
             currentThought = PetDialogue.message(for: .hunger, personality: pet.personality)
         }
-        else if stats.energy < 50
+        else if stats.energy < 80
         {
             currentThought = PetDialogue.message(for: .energy, personality: pet.personality)
         }
-        else if stats.happiness < 50
+        else if stats.happiness < 80
         {
             currentThought = PetDialogue.message(for: .happiness, personality: pet.personality)
         }
-        else if stats.cleanliness < 50
+        else if stats.cleanliness < 80
         {
             currentThought = PetDialogue.message(for: .cleanliness, personality: pet.personality)
         }
@@ -125,6 +125,7 @@ final class PetViewModel: ObservableObject
     
     private func save()
     {
+        if let stats { engine.recalculateMood(stats: stats) }
         checkAndShowThought()
         try? context?.save()
     }
