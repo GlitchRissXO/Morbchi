@@ -48,8 +48,29 @@ struct DesktopPetView: View {
     private var petSprite: String
     {
         let type = viewModel.pet?.petType.rawValue.lowercased() ?? "cat"
-        let action = viewModel.currentAction ?? "idle"
-        return "\(type)_\(action)"
+        
+        if let action = viewModel.currentAction
+        {
+            return "\(type)_\(action)"
+        }
+        
+        if let stats = viewModel.stats
+        {
+            if stats.health < 15        { return "\(type)_sick" }
+            if stats.cleanliness < 30   { return "\(type)_dirty" }
+        }
+        
+        switch viewModel.stats?.mood
+        {
+        case .excited:  return "\(type)_excited"
+        case .magical:  return "\(type)_magical"
+        case .sleepy:   return "\(type)_sleep"
+        case .hungry:   return "\(type)_feed"
+        case .sad:      return "\(type)_sad"
+        case .sick:     return "\(type)_sick"
+        case .curious:  return "\(type)_curious"
+        default:        return "\(type)_idle"
+        }
     }
 
     @ViewBuilder

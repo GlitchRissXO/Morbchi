@@ -54,12 +54,12 @@ final class PetViewModel: ObservableObject
 
     func sleep()
     {
-        currentAction = "sleep"
-        Task { try? await Task.sleep(for: .seconds(2)); currentAction = nil}
-        guard let stats else { return }
-        stats.set(\.energy, to: 100)
+        guard let stats else {return}
+        stats.set(\.energy, to: stats.energy + 50)
         addXP(3)
         save()
+        currentAction = "sleep"
+        Task { try? await Task.sleep(for: .seconds(60 * 15)); currentAction = nil }
     }
 
     func cuddle()
