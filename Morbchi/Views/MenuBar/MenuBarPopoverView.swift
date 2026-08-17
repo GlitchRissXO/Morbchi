@@ -22,19 +22,10 @@ struct MenuBarPopoverView: View
                     .font(Theme.Font.heading(28))
                     .foregroundColor(Theme.Color.textPrimary)
                 Spacer()
-                HStack(spacing: 6)
+                if let mood = viewModel.stats?.mood
                 {
-                    Circle()
-                        .fill(moodDotColor(for: viewModel.stats?.mood))
-                        .frame(width: 8, height: 8)
-                    Text(viewModel.stats?.mood.displayName ?? "")
-                        .font(Theme.Font.body(13))
-                        .foregroundColor(Theme.Color.textPrimary)
+                    MoodBadgeView(mood: mood)
                 }
-                .padding(.horizontal, 18)
-                .padding(.vertical, 4)
-                .background(Theme.Color.surface)
-                .cornerRadius(12)
             }
             
             // Stats — 4 rows matching the Figma StatGauge layout
@@ -69,24 +60,6 @@ struct MenuBarPopoverView: View
         .background(Theme.Color.backgroundPanel)
     }
 
-    private func moodDotColor(for mood: Mood?) -> SwiftUI.Color
-    {
-        switch mood
-        {
-        case .happy:    return Theme.Color.accentWarm
-        case .excited:  return Theme.Color.highlight
-        case .playful:  return Theme.Color.highlight
-        case .curious:  return Theme.Color.accentCool
-        case .magical:  return Theme.Color.highlight
-        case .ascended: return Theme.Color.accentCool
-        case .sleepy:   return Theme.Color.textMuted
-        case .hungry:   return Theme.Color.accentWarm
-        case .sad:      return Theme.Color.textMuted
-        case .grumpy:   return Theme.Color.pop
-        case .sick:     return Theme.Color.sage
-        case nil:       return Theme.Color.textMuted
-        }
-    }
 }
 
 // A single stat row: colored square icon + label + progress bar

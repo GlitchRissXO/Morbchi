@@ -31,9 +31,7 @@ struct DesktopPetView: View {
 
                 if let mood = viewModel.stats?.mood
                 {
-                    Text(mood.displayName)
-                        .font(Theme.Font.heading(16))
-                        .foregroundStyle(Theme.Color.textMuted)
+                    MoodBadgeView(mood: mood)
                 }
             }
             .frame(maxWidth: .infinity)
