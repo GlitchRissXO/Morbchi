@@ -14,11 +14,11 @@ final class PetEngine: ObservableObject
     // Drain rates per tick (per minute). Tune these during playtesting.
     private enum DrainRate
     {
-        static let hunger:      Double = 2.0
-        static let happiness:   Double = 1.5
-        static let energy:      Double = 1.0
-        static let cleanliness: Double = 0.5
-        static let social:      Double = 1.0
+        static let hunger:      Double = 0.5
+        static let happiness:   Double = 0.4
+        static let energy:      Double = 0.3
+        static let cleanliness: Double = 0.15
+        static let social:      Double = 0.3
     }
 
     func start(for stats: PetStats, onSave: @escaping () -> Void)
@@ -44,6 +44,30 @@ final class PetEngine: ObservableObject
         stats.set(\.energy,      to: stats.energy      - DrainRate.energy)
         stats.set(\.cleanliness, to: stats.cleanliness - DrainRate.cleanliness)
         stats.set(\.social,      to: stats.social      - DrainRate.social)
+        
+        //Starving (hunger critically low)
+        if stats.hunger < 15
+        {
+            stats.set(\.energy, to: stats.energy - 0.3)
+            stats.set(\.happiness, to: stats.happiness - 0.3)
+            stats.set(\.health, to: stats.health - 0.2)
+        }
+        
+        //Exhausted (energy critically low)
+        if stats.energy < 15
+        {
+            stats.set(\.health, to: stats.health - 0.2)
+            stats.set(\.happiness, to: stats.happiness - 0.2)
+        }
+
+        //Dirty (cleanliness low)
+        if stats.cleanliness < 30
+        {
+            stats.set(\.health, to: stats.health - 0.2)
+            stats.set(\.happiness, to: stats.happiness - 0.2)
+            stats.set(\.energy, to: stats.energy - 0.15)
+        }
+        
         stats.lastUpdated = .now
         recalculateMood(stats: stats)
         onSave?()
