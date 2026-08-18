@@ -56,12 +56,12 @@ final class PetViewModel: ObservableObject
 
     func sleep()
     {
+        currentAction = "sleep"
         guard let stats else {return}
         stats.set(\.energy, to: stats.energy + 50)
         stats.set(\.health, to: stats.health + 5)
         addXP(3)
         save()
-        currentAction = "sleep"
         Task { try? await Task.sleep(for: .seconds(60 * 15)); currentAction = nil }
     }
 
@@ -80,6 +80,7 @@ final class PetViewModel: ObservableObject
     // Thoughts for low stats.
     func checkAndShowThought()
     {
+        if currentAction == "sleep" { currentThought = nil; return }
         guard let stats, let pet else { return }
         
         if stats.health < 20
