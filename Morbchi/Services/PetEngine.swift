@@ -68,6 +68,18 @@ final class PetEngine: ObservableObject
             stats.set(\.energy, to: stats.energy - 0.15)
         }
         
+        // Unhappy — happiness critically low
+        if stats.happiness < 15
+        {
+            stats.set(\.health, to: stats.health - 0.2)
+        }
+
+        // Lonely — social critically low
+        if stats.social < 15
+        {
+            stats.set(\.health, to: stats.health - 0.2)
+        }
+        
         // Positive health recovery when stats are high
         if stats.hunger > 70    { stats.set(\.health, to: stats.health + 0.1)}
         if stats.happiness > 70 {stats.set (\.health, to: stats.health + 0.1)}
