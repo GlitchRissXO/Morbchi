@@ -49,7 +49,7 @@
 - Floating transparent `NSPanel` (400×300), always on top, never steals focus
 - Pet sprite renders based on current mood or active action
 - Idle bob animation (gentle float up/down on repeat)
-- Right-click context menu: Feed, Pet, Bathe, Sleep, Quit
+- Right-click context menu: Feed, Pet, Bathe, Sleep, Open Stats, Quit
 - Position saved between sessions
 
 ### Pet Sprites
@@ -65,13 +65,20 @@
 
 Sprite naming convention: `[petType]_[state]` (e.g. `rabbit_idle`, `fox_dirty`)
 
+### Sprite Priority Order
+When choosing which sprite to show, the priority is:
+1. Active action (feed, bath, pet, sleep) — overrides everything
+2. Health < 20 → `[pet]_sick`
+3. Cleanliness < 30 → `[pet]_dirty`
+4. Current mood → mood sprite
+
 ### Care Actions & Animations
 | Action | Sprite shown | Stat changed |
 |---|---|---|
-| Feed | `[pet]_feed` for 2s | Hunger +20, Happiness +5 |
-| Pet/Cuddle | `[pet]_pet` for 2s | Happiness +10, Social +10 |
-| Bathe | `[pet]_bath` for 2s | Cleanliness → 100, Happiness +5 |
-| Sleep | `[pet]_sleep` for 2s | Energy → 100 |
+| Feed | `[pet]_feed` for 2s | Hunger +20, Happiness +5, Health +2 |
+| Pet/Cuddle | `[pet]_pet` for 2s | Happiness +10, Social +10, Health +2 |
+| Bathe | `[pet]_bath` for 2s | Cleanliness → 100, Happiness +5, Health +40 |
+| Sleep | `[pet]_sleep` for 15 min | Energy +50, Health +5 |
 
 ### Mood System
 Mood recalculates every 30 seconds and immediately after any care action.
@@ -85,18 +92,19 @@ Mood recalculates every 30 seconds and immediately after any care action.
 | sleepy | Energy < 30 | `[pet]_sleep` |
 | hungry | Hunger < 30 | `[pet]_feed` |
 | sad | Happiness < 30 or Social < 30 | `[pet]_sad` |
-| sick | Health < 30 | `[pet]_sick` |
+| sick | Health < 20 | `[pet]_sick` |
 
 > **Note:** `dirty` is a sprite state (shown when cleanliness < 30) but is not a `Mood` enum case — it's handled separately in the sprite selection logic, not via the mood system.
 
-### Sleep Action
-Sleep is an instant stat restore (Energy → 100) triggered from the context menu. The `[pet]_sleep` sprite shows for 2 seconds then returns to idle. A full sleep cycle (room dims, ambient sounds, night animation) is planned for a future version.
+### Sleep
+Sleep restores Energy +50 and Health +5, triggered from the context menu. The `[pet]_sleep` sprite shows for 15 minutes then returns to idle. Thought bubbles are suppressed for the full duration of the nap.
 
 ### Thought Bubble
-- Appears above the pet when a stat drops below 30
+- Appears above the pet when a stat is critically low
 - Dark rounded rectangle + lavender border + angled triangle tail
-- Personality-driven dialogue — each of the 5 personalities has unique lines for hunger, energy, happiness, and cleanliness
-- Priority order: hunger → energy → happiness → cleanliness
+- Personality-driven dialogue — each of the 5 personalities has unique lines for sick, hunger, energy, happiness, and cleanliness (25 lines total)
+- Priority order: sick (health < 20) → hunger → energy → happiness → cleanliness
+- Suppressed during sleep
 
 ### Personality Dialogue
 | Personality | Tone |
@@ -113,11 +121,21 @@ Sleep is an instant stat restore (Energy → 100) triggered from the context men
 
 | Stat | Drain per tick |
 |---|---|
-| Hunger | 2.0 |
-| Happiness | 1.5 |
-| Energy | 1.0 |
-| Cleanliness | 0.5 |
-| Social | 1.0 |
+| Hunger | 0.5 |
+| Happiness | 0.4 |
+| Energy | 0.3 |
+| Cleanliness | 0.15 |
+| Social | 0.3 |
+
+### Stat Interactions
+Stats influence each other every tick:
+- Hunger < 15: energy, happiness, and health drain faster
+- Energy < 15: health and happiness drain faster
+- Cleanliness < 30: health, happiness, and energy drain faster
+- Happiness < 15: health drains faster
+- Social < 15: health drains faster
+
+**Positive recovery:** When hunger, happiness, or energy exceeds 70, health slowly recovers (+0.1 per tick each).
 
 ### Menu Bar
 - Status bar icon
@@ -140,9 +158,9 @@ Sleep is an instant stat restore (Energy → 100) triggered from the context men
 | Hunger | Yes | Feed |
 | Happiness | Yes | Pet/Cuddle |
 | Energy | Yes | Sleep |
-| Health | Only from neglect | (future: heal potions) |
+| Health | From neglect (low stats drain it) | High stats restore it slowly |
 | Cleanliness | Yes (slow) | Bathe |
-| Social | Yes | Cuddle, Talk |
+| Social | Yes | Cuddle |
 | Magic | No — grows with leveling | Level up |
 | Knowledge | No — grows from games | (future: mini-games) |
 
@@ -150,9 +168,7 @@ Sleep is an instant stat restore (Energy → 100) triggered from the context men
 
 ## Current Focus (active development)
 
-- [ ] Mood-driven sprite swapping in DesktopPetView
-- [ ] Mood badge under the pet (matching menu bar style)
-- [ ] Coffee / water / break reminder animations
+- [ ] Coffee / water / break reminder animations (needs Figma design first)
 - [ ] Wellness nudge system (remind user to take breaks)
 
 ---
@@ -182,7 +198,8 @@ Morbchi/
 │   ├── Onboarding/
 │   │   └── OnboardingView.swift
 │   └── Shared/
-│       └── Theme.swift
+│       ├── Theme.swift
+│       └── MoodBadgeView.swift
 ├── Services/
 │   └── PetEngine.swift
 └── Assets.xcassets
@@ -190,23 +207,4 @@ Morbchi/
 
 ---
 
-## Scaled Back (future versions)
-
-These features are planned but not being built in v1:
-- Room window (care hub)
-- Shop & coin system
-- Mini-games
-- Stats window (standalone)
-- AI chat (Claude API)
-- Weather reactions (WeatherKit)
-- Activity monitoring
-- Journal / diary
-- Photo capture
-- CloudKit sync
-- Sound & audio
-- Evolution branching
-- Seasonal events
-
----
-
-*Last updated: 2026-08-17*
+*Last updated: 2026-08-18*

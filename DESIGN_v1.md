@@ -38,7 +38,9 @@
 ```
 Every 30 seconds:
 PetEngine.tick()
-  → drains: hunger(-2.0), happiness(-1.5), energy(-1.0), cleanliness(-0.5), social(-1.0)
+  → drains: hunger(-0.5), happiness(-0.4), energy(-0.3), cleanliness(-0.15), social(-0.3)
+  → stat interactions: low stats drain health faster (hunger<15, energy<15, cleanliness<30, happiness<15, social<15)
+  → positive recovery: hunger/happiness/energy > 70 each restore health +0.1/tick
   → recalculateMood(stats)
   → onSave() → context.save()
   → PetViewModel publishes change
@@ -51,7 +53,7 @@ User right-clicks pet → selects Feed
   → PetViewModel.feed()
       → currentAction = "feed"
       → Task.sleep(2s) → currentAction = nil
-      → stats.hunger += 20, stats.happiness += 5
+      → stats.hunger += 20, stats.happiness += 5, stats.health += 2
       → addXP(5)
       → save()
           → engine.recalculateMood(stats)   ← immediate mood update
@@ -59,10 +61,26 @@ User right-clicks pet → selects Feed
           → context.save()
 ```
 
+### Sleep Action
+```
+User right-clicks pet → selects Sleep
+  → PetViewModel.sleep()
+      → currentAction = "sleep"             ← set first so sprite locks immediately
+      → stats.energy += 50, stats.health += 5
+      → addXP(3)
+      → save()
+          → engine.recalculateMood(stats)
+          → checkAndShowThought()           ← returns early (suppressed during sleep)
+          → context.save()
+      → Task.sleep(15 min) → currentAction = nil
+```
+
 ### Thought Bubble Trigger
 ```
 checkAndShowThought():
-  if hunger < 30   → show hunger dialogue for pet's personality
+  if currentAction == "sleep" → currentThought = nil (suppressed during nap)
+  if health < 20   → show sick dialogue for pet's personality
+  if hunger < 30   → show hunger dialogue
   if energy < 30   → show energy dialogue
   if happiness < 30 → show happiness dialogue
   if cleanliness < 30 → show cleanliness dialogue
@@ -72,7 +90,8 @@ checkAndShowThought():
 ### Sprite Selection
 ```
 petSprite computed property:
-  if currentAction != nil → "[petType]_[currentAction]"   (action sprite, 2s)
+  if currentAction != nil → "[petType]_[currentAction]"   (action sprite; 2s for most, 15 min for sleep)
+  else if health < 20     → "[petType]_sick"              (health state, overrides mood)
   else if cleanliness < 30 → "[petType]_dirty"            (not a Mood case — checked separately)
   else → mood → sprite mapping:
       excited  → "[petType]_excited"
@@ -154,7 +173,7 @@ Not yet triggered: playful, grumpy, ascended
 
 ### LowStat (enum — for dialogue system)
 ```swift
-case hunger, energy, happiness, cleanliness
+case hunger, energy, happiness, cleanliness, sick
 ```
 
 ---
@@ -162,8 +181,8 @@ case hunger, energy, happiness, cleanliness
 ## 4. UI Components
 
 ### DesktopPetView
-- Hosts the floating pet sprite + thought bubble + mood label
-- `petSprite` computed property maps mood/action → asset name
+- Hosts the floating pet sprite + thought bubble + mood badge
+- `petSprite` computed property: action → sick → dirty → mood
 - Idle bob: `.offset(y:)` + `.easeInOut(1.5s).repeatForever`
 - Context menu: Feed, Pet, Bathe, Sleep | Open Stats | Quit
 
@@ -172,6 +191,11 @@ case hunger, energy, happiness, cleanliness
 - Italic flavor font, white text, wraps to max 300pt width
 - Triangle tail below (angled point, same fill + stroke)
 - Shown when `viewModel.currentThought != nil`
+
+### MoodBadgeView (shared)
+- Color dot + mood name label on surface background
+- Used in both DesktopPetView (under the pet) and MenuBarPopoverView
+- Dot color varies by mood
 
 ### PetWindowController (NSPanel)
 - Size: 400×300
@@ -184,7 +208,7 @@ case hunger, energy, happiness, cleanliness
 ### MenuBarPopoverView
 - Pet name + mood badge (color dot + mood name)
 - Stat rows: hunger, happy, energy, health — each with custom icon + progress bar
-- Progress bar: 120pt fixed width, `accentCool` fill, `surface` track
+- Progress bar: 120pt fixed width, `accentWarm` fill, `surface` track
 
 ### OnboardingView
 - 6-step flow driven by `OnboardingStep` enum
@@ -199,14 +223,26 @@ case hunger, energy, happiness, cleanliness
 Tick interval: 30 seconds
 
 Drain rates (per tick):
-  hunger:      2.0
-  happiness:   1.5
-  energy:      1.0
-  cleanliness: 0.5
-  social:      1.0
+  hunger:      0.5
+  happiness:   0.4
+  energy:      0.3
+  cleanliness: 0.15
+  social:      0.3
+
+Stat interactions (per tick):
+  hunger < 15      → energy -0.3, happiness -0.3, health -0.2
+  energy < 15      → health -0.2, happiness -0.2
+  cleanliness < 30 → health -0.2, happiness -0.2, energy -0.15
+  happiness < 15   → health -0.2
+  social < 15      → health -0.2
+
+Positive recovery (per tick):
+  hunger > 70    → health +0.1
+  happiness > 70 → health +0.1
+  energy > 70    → health +0.1
 
 Mood thresholds:
-  health < 30    → sick
+  health < 20    → sick
   hunger < 30    → hungry
   energy < 30    → sleepy
   social < 30    → sad
@@ -229,7 +265,7 @@ Located at `Models/PetDialogue.swift`
 
 `PetDialogue.message(for: LowStat, personality: Personality) -> String`
 
-20 unique lines — one per stat × personality combination. Stat priority when multiple are low: hunger → energy → happiness → cleanliness.
+25 unique lines — one per stat × personality combination (5 stats × 5 personalities). Stat priority when multiple are low: sick (health < 20) → hunger → energy → happiness → cleanliness.
 
 ---
 
@@ -243,14 +279,18 @@ Theme.Color.backgroundPanel  // #1A1225 deep midnight plum
 Theme.Color.surface          // #2D2040 dark violet
 Theme.Color.accentCool       // #9B72CF soft lavender
 Theme.Color.accentWarm       // #E8A87C amber
+Theme.Color.highlight        // #F4D35E golden yellow
 Theme.Color.textPrimary      // #F0E6FF pale lilac white
 Theme.Color.textMuted        // #8A7AA0 dusty mauve
+Theme.Color.pop              // #C97B84 muted rose
+Theme.Color.sage             // #7AAB5F muted green
 ```
 
 ### Fonts
 ```swift
-Theme.Font.heading(_ size: CGFloat)  // Playfair Display
-Theme.Font.flavor(_ size: CGFloat)   // italic flavor font
+Theme.Font.heading(_ size: CGFloat)  // Playfair Display Bold
+Theme.Font.flavor(_ size: CGFloat)   // Playfair Display Italic
+Theme.Font.body(_ size: CGFloat)     // system rounded
 ```
 
 ### Spacing
@@ -258,6 +298,8 @@ Theme.Font.flavor(_ size: CGFloat)   // italic flavor font
 Theme.Spacing.xs  // 4pt
 Theme.Spacing.sm  // 8pt
 Theme.Spacing.md  // 16pt
+Theme.Spacing.lg  // 24pt
+Theme.Spacing.xl  // 40pt
 ```
 
 ### MainButtonStyle
@@ -293,17 +335,18 @@ Onboarding: `egg`, `egg_hatching`, `hatched_[petType]`, `logo`
 - [x] Full 6-step onboarding (pet type, personality, name, hatch, meet)
 - [x] All 5 pet types × 11 mood/action sprites
 - [x] Egg shake animation on hatch screen
-
-### In Progress
-- [ ] Mood-driven sprite swapping in DesktopPetView (wiring mood enum → correct sprite)
-- [ ] Dirty sprite logic (cleanliness < 30 → `[pet]_dirty`, bypasses mood system)
-- [ ] Mood badge under the pet (matching menu bar style)
-- [ ] Coffee / water / break reminder animations + wellness nudge system
+- [x] Mood-driven sprite swapping (petSprite priority: action → sick → dirty → mood)
+- [x] Dirty sprite logic (cleanliness < 30 → `[pet]_dirty`, bypasses mood system)
+- [x] MoodBadgeView shared component (used under pet + in menu bar popover)
+- [x] Health as primary wellness stat (all stats influence health positively or negatively)
+- [x] Stat interaction system (neglect chains drain health faster)
+- [x] Sick dialogue + thought bubble priority (health → hunger → energy → happiness → cleanliness)
+- [x] Sleep nap overhaul (15 min duration, +50 energy, +5 health, thought bubbles suppressed)
 
 ### Next Up
-- [ ] Design coffee, water, break sprites in Figma
+- [ ] Coffee / water / break reminder animations (needs Figma design first)
 - [ ] Wellness nudge trigger system (activity timer)
 
 ---
 
-*Last updated: 2026-08-17*
+*Last updated: 2026-08-18*
