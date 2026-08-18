@@ -54,7 +54,7 @@ struct DesktopPetView: View {
         
         if let stats = viewModel.stats
         {
-            if stats.health < 15        { return "\(type)_sick" }
+            if stats.health < 20        { return "\(type)_sick" }
             if stats.cleanliness < 30   { return "\(type)_dirty" }
         }
         
