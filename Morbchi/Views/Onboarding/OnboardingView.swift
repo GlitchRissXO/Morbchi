@@ -155,7 +155,7 @@ struct NameStepView: View
         VStack(spacing: 24)
         {
             Spacer()
-            Text("What your companion's name?")
+            Text("What is your companion's name?")
                 .font(Theme.Font.heading(32))
                 .foregroundColor(Theme.Color.textPrimary)
                 .multilineTextAlignment(.center)
