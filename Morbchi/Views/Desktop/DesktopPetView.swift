@@ -62,8 +62,8 @@ struct DesktopPetView: View {
         {
         case .excited:  return "\(type)_excited"
         case .magical:  return "\(type)_magical"
-        case .sleepy:   return "\(type)_sleep"
-        case .hungry:   return "\(type)_feed"
+        case .sleepy:   return "\(type)_tired"
+        case .hungry:   return "\(type)_hungry"
         case .sad:      return "\(type)_sad"
         case .sick:     return "\(type)_sick"
         case .curious:  return "\(type)_curious"
