@@ -82,7 +82,11 @@ final class PetViewModel: ObservableObject
     {
         guard let stats, let pet else { return }
         
-        if stats.hunger < 30
+        if stats.health < 20
+        {
+            currentThought = PetDialogue.message(for: .sick, personality: pet.personality)
+        }
+        else if stats.hunger < 30
         {
             currentThought = PetDialogue.message(for: .hunger, personality: pet.personality)
         }

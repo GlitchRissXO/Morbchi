@@ -4,7 +4,7 @@ import Foundation
 
 enum LowStat
 {
-    case hunger, energy, happiness, cleanliness
+    case hunger, energy, happiness, cleanliness, sick
 }
 
 struct PetDialogue
@@ -60,7 +60,19 @@ struct PetDialogue
             return "A clear body brings a clear mind..."
         case (.cleanliness, .gentle):
             return "Um...I think I might need a bath..."
-            
+
+        //Sick
+        case (.sick, .mischievous):
+            return "I feel terrible... and I'm blaming you entirely."
+        case (.sick, .dramatic):
+            return "I am DYING. This is the end. Goodbye, cruel world."
+        case (.sick, .wild):
+            return "Something is wrong. I don't like it. FIX IT NOW."
+        case (.sick, .sage):
+            return "The body speaks when the spirit has been ignored too long..."
+        case (.sick, .gentle):
+            return "I don't feel very well... I think I need some help."
+
         }
     }
 }
