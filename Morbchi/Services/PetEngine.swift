@@ -59,7 +59,7 @@ final class PetEngine: ObservableObject
             stats.set(\.health, to: stats.health - 0.2)
             stats.set(\.happiness, to: stats.happiness - 0.2)
         }
-
+        
         //Dirty (cleanliness low)
         if stats.cleanliness < 30
         {
@@ -67,6 +67,11 @@ final class PetEngine: ObservableObject
             stats.set(\.happiness, to: stats.happiness - 0.2)
             stats.set(\.energy, to: stats.energy - 0.15)
         }
+        
+        // Positive health recovery when stats are high
+        if stats.hunger > 70    { stats.set(\.health, to: stats.health + 0.1)}
+        if stats.happiness > 70 {stats.set (\.health, to: stats.health + 0.1)}
+        if stats.energy > 70 {stats.set (\.health, to: stats.health + 0.1)}
         
         stats.lastUpdated = .now
         recalculateMood(stats: stats)
@@ -77,7 +82,7 @@ final class PetEngine: ObservableObject
     {
         switch true
         {
-        case stats.health < 30:          stats.mood = .sick
+        case stats.health < 20:          stats.mood = .sick
         case stats.hunger < 30:          stats.mood = .hungry
         case stats.energy < 30:          stats.mood = .sleepy
         case stats.social < 30:          stats.mood = .sad

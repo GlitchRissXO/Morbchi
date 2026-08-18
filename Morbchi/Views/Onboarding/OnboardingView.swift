@@ -48,7 +48,7 @@ struct OnboardingView: View
     }
 }
 
-// Welcome screen — first thing the user sees
+// Welcome screen 
 struct WelcomeStepView: View
 {
     var onNext: () -> Void
@@ -186,7 +186,7 @@ struct NameStepView: View
     }
 }
 
-// Personality selection — user picks their companion's personality type
+// Personality selection (user picks their companion's personality)
 struct PersonalityStepView: View
 {
     @Binding var selected: Personality
@@ -274,7 +274,7 @@ struct PersonalityCard: View
     }
 }
 
-// Meet screen — the pet has hatched, user sees them for the first time
+// Meet screen (pet hatched. User sees them for the first time)
 struct MeetStepView: View
 {
     let petType: PetType

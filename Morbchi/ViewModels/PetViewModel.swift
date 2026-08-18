@@ -36,6 +36,7 @@ final class PetViewModel: ObservableObject
         guard let stats else { return }
         stats.set(\.hunger, to: stats.hunger + amount)
         stats.set(\.happiness, to: stats.happiness + 5)
+        stats.set(\.health, to: stats.health + 2)
         addXP(5)
         save()
         
@@ -48,6 +49,7 @@ final class PetViewModel: ObservableObject
         guard let stats else { return }
         stats.set(\.cleanliness, to: 100)
         stats.set(\.happiness, to: stats.happiness + 5)
+        stats.set(\.health, to: stats.health + 40)
         addXP(5)
         save()
     }
@@ -56,6 +58,7 @@ final class PetViewModel: ObservableObject
     {
         guard let stats else {return}
         stats.set(\.energy, to: stats.energy + 50)
+        stats.set(\.health, to: stats.health + 5)
         addXP(3)
         save()
         currentAction = "sleep"
@@ -69,6 +72,7 @@ final class PetViewModel: ObservableObject
         guard let stats else { return }
         stats.set(\.happiness, to: stats.happiness + 10)
         stats.set(\.social, to: stats.social + 10)
+        stats.set(\.health, to: stats.health + 2)
         addXP(2)
         save()
     }
