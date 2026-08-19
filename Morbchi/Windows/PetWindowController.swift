@@ -12,7 +12,7 @@ final class PetWindowController: NSWindowController
         self.viewModel = viewModel
 
         let panel = NSPanel(
-            contentRect: NSRect(x: 100, y: 100, width: 400, height: 300),
+            contentRect: NSRect(x: 100, y: 100, width: 400, height: 480),
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false)

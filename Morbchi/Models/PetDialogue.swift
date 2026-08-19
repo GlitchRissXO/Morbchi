@@ -9,6 +9,7 @@ enum LowStat
 
 struct PetDialogue
 {
+    // MARK: - Low Stats Messages
     static func message(for stat: LowStat, personality: Personality) -> String
     {
         switch (stat, personality)
@@ -72,7 +73,65 @@ struct PetDialogue
             return "The body speaks when the spirit has been ignored too long..."
         case (.sick, .gentle):
             return "I don't feel very well... I think I need some help."
-
+            
+        }
+    }
+    
+    // MARK: - Dream Thoughts
+    static func dreamThoughts(for personality: Personality) -> [String]
+    {
+        switch personality
+        {
+        case .mischievous:
+            return [
+                
+                "...stealing all the snacks and no one can stop me...",
+                "...chasing something... not sure what... but winning...",
+                "...the world is made of yarn and I own all of it...",
+                "...getting away with it again...",
+                "...hiding everything and watching them look for it...",
+                "...being chaotic feels so good even in dreams..."
+            ]
+        case .dramatic:
+            return [
+                
+                "...being the star of the show... obviously...",
+                "...everyone is gasping as I enter the room...",
+                "...a standing ovation... just for existing...",
+                "...being so beautiful it's making everyone cry...",
+                "...the whole world is watching as I take my bow...",
+                "...even in dreams I am the main character..."
+            ]
+        case .wild:
+            return [
+                
+                "...running... running so fast... wheeeee...",
+                "...everything is moving really fast and I love it...",
+                "...there are snacks EVERYWHERE...",
+                "...flying but also rolling... both at once...",
+                "...so many things to chase... so many...",
+                "...the dream is loud and I am louder..."
+            ]
+        case .sage:
+            return [
+                
+                "...the moon is speaking and I understand...",
+                "...all things return to where they began...",
+                "...dreaming of the dream inside the dream...",
+                "...the stars are just eyes that never close...",
+                "...time moves differently when you are still...",
+                "...even sleep holds its own kind of wisdom..."
+            ]
+        case .gentle:
+            return [
+                
+                "...everything is warm and soft and very nice...",
+                "...someone is making tea and the whole place smells like honey...",
+                "...the flowers are singing very quietly...",
+                "...so cozy... don't want to wake up...",
+                "...it feels like a big warm hug...",
+                "...someone is humming and it is the nicest sound...mhmmhhm"
+            ]
         }
     }
 }

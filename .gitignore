@@ -1,1 +1,13 @@
 FUTURE.md
+
+# Xcode user data
+*.xcuserstate
+xcuserdata/
+
+# Xcode derived data & build
+DerivedData/
+build/
+*.pbxuser
+
+# macOS
+.DS_Store

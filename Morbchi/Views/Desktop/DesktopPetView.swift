@@ -12,21 +12,28 @@ struct DesktopPetView: View {
     {
         ZStack
         {
+
+            // Pet + speech bubble + mood badge
             VStack(spacing: Theme.Spacing.xs)
             {
-                if let thought = viewModel.currentThought
+                if let thought = viewModel.currentThought, viewModel.currentAction != "sleep"
                 {
                     ThoughtBubbleView(text: thought)
                 }
-                
+
                 Image(petSprite)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 120, height: 120)
-                
-                    // Gentle idle bob. Floats up and back down on repeat
+                    .overlay(alignment: .topTrailing) {
+                        if let thought = viewModel.currentThought, viewModel.currentAction == "sleep"
+                        {
+                            DreamBubbleView(text: thought)
+                                .offset(x: 150, y: -150)
+                        }
+                    }
                     .offset(y: isAnimating ? -8 : 0)
-                    .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true),value: isAnimating)
+                    .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: isAnimating)
                     .onAppear { isAnimating = true }
 
                 if let mood = viewModel.stats?.mood
@@ -37,6 +44,7 @@ struct DesktopPetView: View {
             .frame(maxWidth: .infinity)
             .padding(Theme.Spacing.sm)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.clear)
         .contextMenu { contextMenuItems }
     }
