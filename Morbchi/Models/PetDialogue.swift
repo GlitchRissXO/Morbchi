@@ -2,10 +2,9 @@
 
 import Foundation
 
-enum LowStat
-{
-    case hunger, energy, happiness, cleanliness, sick
-}
+enum LowStat {case hunger, energy, happiness, cleanliness, sick}
+
+enum WellnessNudge { case coffee, water, breakTime }
 
 struct PetDialogue
 {
@@ -132,6 +131,50 @@ struct PetDialogue
                 "...it feels like a big warm hug...",
                 "...someone is humming and it is the nicest sound...mhmmhhm"
             ]
+        }
+    }
+        // MARK: - Wellness Messages
+        static func wellnessMessage(for nudge: WellnessNudge, personality: Personality) -> String
+        {
+            switch (nudge, personality)
+            {
+                // Coffee
+            case (.coffee, .mischievous):
+                return "No coffee yet?? Bold choice. Terrible, but bold."
+            case (.coffee, .dramatic):
+                return "I NEED you to go get a coffee. For both our sakes."
+            case (.coffee, .wild):
+                return "COFFEE TIME. GO. NOW. PLEASEEEE."
+            case (.coffee, .sage):
+                return "Coffee breaks are... sacred. Do not skip it."
+            case (.coffee, .gentle):
+                return "Hey... have you had your coffee yet? Just checking on you."
+                
+                // Water
+            case (.water, .mischievous):
+                return "Hydrate or I start causing problems. Your call."
+            case (.water, .dramatic):
+                return "You are WITHERING. Please. Drink some water."
+            case (.water, .wild):
+                return "WATER WATER WATER drink it NOW go!!"
+            case (.water, .sage):
+                return "The well within you runs low. Drink some water."
+            case (.water, .gentle):
+                return "Have you had some water recently? Please take care of yourself."
+                
+                //Break
+            case (.breakTime, .mischievous):
+                return "You've been sitting there for AGES. Get up. I'm embarrassed for you."
+            case (.breakTime, .dramatic):
+                return "You MUST step away. Your back is probably screaming at you."
+            case (.breakTime, .wild):
+                return "GET UP! MOVE, STRETCH, DO SOMETHING! ANYTHINGGGGG."
+            case (.breakTime, .sage):
+                return "Rest is not weakness. It is part of the work. Take a break."
+            case (.breakTime, .gentle):
+                return "You've been at it for a while. A little break would do you good."
+                
+        
         }
     }
 }
