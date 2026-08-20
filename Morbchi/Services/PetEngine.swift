@@ -25,10 +25,7 @@ final class PetEngine: ObservableObject
     {
         timer = Timer.publish(every: 30, on: .main, in: .common)
             .autoconnect()
-            .sink
-            { [weak self] _ in
-                self?.tick(stats: stats)
-            }
+            .sink{ [weak self] _ in self?.tick(stats: stats)}
         self.onSave = onSave
     }
 
