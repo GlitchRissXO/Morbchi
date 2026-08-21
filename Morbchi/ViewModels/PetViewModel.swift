@@ -12,6 +12,7 @@ final class PetViewModel: ObservableObject
     @Published var stats: PetStats?
 
     private let engine = PetEngine.shared
+    private let wellnessEngine = WellnessEngine.shared
 
     func load(from context: ModelContext)
     {
@@ -24,11 +25,15 @@ final class PetViewModel: ObservableObject
         {
             engine.start(for: stats, onSave: { [weak self] in
                 self?.save()})
+            
+            wellnessEngine.start { [weak self] nudge in
+            self?.showWellnessNudge(nudge)}
         }
+        
     }
 
     // MARK: - Care Actions
-
+    //Feed
     func feed(amount: Double = 20)
     {
         currentAction = "feed"
@@ -41,7 +46,7 @@ final class PetViewModel: ObservableObject
         save()
         
     }
-
+    //bath
     func bathe()
     {
         currentAction = "bath"
@@ -53,7 +58,7 @@ final class PetViewModel: ObservableObject
         addXP(5)
         save()
     }
-
+    //sleep
     func sleep()
     {
         currentAction = "sleep"
@@ -63,6 +68,8 @@ final class PetViewModel: ObservableObject
         addXP(3)
         save()
 
+        //Dream Thoughts
+        
         let thoughts = PetDialogue.dreamThoughts(for: pet.personality)
 
         Task { try? await Task.sleep(for: .seconds(60 * 15)); currentAction = nil }
@@ -87,6 +94,8 @@ final class PetViewModel: ObservableObject
         }
     }
 
+    //cuddle
+    
     func cuddle()
     {
         currentAction = "pet"
@@ -98,8 +107,24 @@ final class PetViewModel: ObservableObject
         addXP(2)
         save()
     }
-
-    // Thoughts for low stats.
+    
+    func showWellnessNudge(_ nudge: WellnessNudge)
+    {
+        if currentAction == "sleep" { return }
+        guard let pet else { return }
+        
+        switch nudge
+        {
+        case .coffee: currentAction = "coffee"
+        case .water: currentAction = "water"
+        case .breakTime: currentAction = "break"
+        }
+        
+        currentThought = PetDialogue.wellnessMessage(for: nudge, personality: pet.personality)
+        Task { try? await Task.sleep(for: .seconds(60)); currentAction = nil; currentThought = nil}
+    }
+    
+    // MARK: Thoughts low stats.
     func checkAndShowThought()
     {
         if currentAction == "sleep" { currentThought = nil; return }
