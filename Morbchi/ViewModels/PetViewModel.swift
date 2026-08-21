@@ -63,10 +63,21 @@ final class PetViewModel: ObservableObject
     {
         currentAction = "sleep"
         guard let stats, let pet else { return }
-        stats.set(\.energy, to: stats.energy + 50)
-        stats.set(\.health, to: stats.health + 5)
-        addXP(3)
-        save()
+        Task
+        {
+            for _ in 1...15
+            {
+                try? await Task.sleep(for: .seconds(60))
+                guard currentAction == "sleep" else { return }
+                stats.set(\.energy, to: stats.energy + (50.0 / 15.0))
+                save()
+            }
+            
+            stats.set(\.health, to: stats.health + 5)
+            addXP(3)
+            save()
+            
+        }
 
         //Dream Thoughts
         

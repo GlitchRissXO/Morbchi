@@ -85,7 +85,7 @@ struct DesktopPetView: View {
         Button("Feed")  { viewModel.feed() }
         Button("Pet")   { viewModel.cuddle() }
         Button("Bathe") { viewModel.bathe() }
-        Button("Sleep") { viewModel.sleep() }
+        Button("Nap") { viewModel.sleep() }
         Divider()
         Button("Open Room") { /* TODO: open Room window */ }
         Button("Open Stats") {
