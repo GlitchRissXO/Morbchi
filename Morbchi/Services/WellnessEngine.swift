@@ -34,7 +34,9 @@ final class WellnessEngine
         let minute = calendar.component(.minute, from: now)
         let today = calendar.startOfDay(for: now)
         
-        //Coffee Morning Check
+        //MARK: Coffee Break
+        
+        // Morning
         let lastMorning = UserDefaults.standard.object(forKey: "lastCoffeeMorning") as? Date
         let shownMorningToday = lastMorning.map { calendar.startOfDay(for: $0) == today } ?? false
 
@@ -47,7 +49,7 @@ final class WellnessEngine
             return
         }
         
-        //Coffee Afternoon Check
+        //Afternoon
         let lastAfternoon = UserDefaults.standard.object(forKey: "lastCoffeeAfternoon") as? Date
         let shownAfternoonToday = lastAfternoon.map {calendar.startOfDay(for: $0) == today } ?? false
         
@@ -60,6 +62,27 @@ final class WellnessEngine
             return
         }
         
+        
+        // MARK: Water Break
+        let lastWater = UserDefaults.standard.object(forKey: "lastWaterNudge") as? Date ?? Date.distantPast
+        
+        if now.timeIntervalSince(lastWater) >= 3600
+        {
+            UserDefaults.standard.set(now, forKey: "lastWaterNudge")
+            onNudge?(.water)
+            return
+        }
+        
+        // MARK: Time Break
+        
+        let lastBreak = UserDefaults.standard.object(forKey: "lastBreakNudge") as? Date ?? Date.distantPast
+        
+        if now.timeIntervalSince(lastBreak) >= 9000
+        {
+            UserDefaults.standard.set(now, forKey: "lastBreakNudge")
+            onNudge?(.breakTime)
+            return
+        }
     }
     
 }
