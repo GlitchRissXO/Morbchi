@@ -7,9 +7,8 @@ final class Pet
     var name: String
     var personality: Personality
     var petType: PetType
-    var lifeStage: LifeStage
-    var xp: Int
-    var level: Int
+    var magicXP: Int
+    var magicLevel: Int
     var coins: Int
     var createdAt: Date
     var lastInteractedAt: Date
@@ -21,9 +20,8 @@ final class Pet
         self.name = name
         self.personality = personality
         self.petType = petType
-        self.lifeStage = .egg
-        self.xp = 0
-        self.level = 1
+        self.magicXP = 0
+        self.magicLevel = 1
         self.coins = 10
         self.createdAt = .now
         self.lastInteractedAt = .now
@@ -51,21 +49,6 @@ enum Personality: String, Codable, CaseIterable
             case .gentle:      return "soft & warm"
             }
         }
-}
-
-enum LifeStage: String, Codable, CaseIterable
-{
-    case egg      = "Egg"
-    case sprout   = "Sprout"
-    case wisp     = "Wisp"
-    case briar    = "Briar"
-    case shade    = "Shade"
-    case familiar = "Familiar"
-    case warden   = "Warden"
-    case specter  = "Specter"
-    case elder    = "Elder"
-    case archmage = "Archmage"
-    case ascended = "Ascended"
 }
 
 // The species of the pet, chosen during onboarding

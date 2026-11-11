@@ -91,15 +91,15 @@ final class PetEngine: ObservableObject
     {
         switch true
         {
-        case stats.health < 20:          stats.mood = .sick
-        case stats.hunger < 30:          stats.mood = .hungry
-        case stats.energy < 30:          stats.mood = .sleepy
-        case stats.social < 30:          stats.mood = .sad
-        case stats.happiness < 30:       stats.mood = .sad
-        case stats.magic > 80:           stats.mood = .magical
-        case stats.happiness > 80 && stats.energy > 60: stats.mood = .excited
-        case stats.happiness > 60:       stats.mood = .happy
-        default:                         stats.mood = .curious
+        case stats.health < 20:                                          stats.mood = .sick
+        case (stats.magicalMoodExpiry ?? .distantPast) > Date():         stats.mood = .magical
+        case stats.hunger < 30:                                          stats.mood = .hungry
+        case stats.energy < 30:                                          stats.mood = .sleepy
+        case stats.social < 30:                                          stats.mood = .sad
+        case stats.happiness < 30:                                       stats.mood = .sad
+        case stats.happiness > 80 && stats.energy > 60:                 stats.mood = .excited
+        case stats.happiness > 60:                                       stats.mood = .happy
+        default:                                                         stats.mood = .curious
         }
     }
 }

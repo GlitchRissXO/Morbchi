@@ -40,7 +40,6 @@ struct MoodBadgeView: View
         case .sleepy:   return Theme.Color.textMuted
         case .hungry:   return Theme.Color.accentWarm
         case .sad:      return Theme.Color.textMuted
-        case .grumpy:   return Theme.Color.pop
         case .sick:     return Theme.Color.accentWarm
         }
     }

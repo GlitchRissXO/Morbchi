@@ -42,9 +42,9 @@ final class PetViewModel: ObservableObject
         stats.set(\.hunger, to: stats.hunger + amount)
         stats.set(\.happiness, to: stats.happiness + 5)
         stats.set(\.health, to: stats.health + 2)
-        addXP(5)
+        addMagicXP(5)
         save()
-        
+
     }
     //bath
     func bathe()
@@ -55,7 +55,7 @@ final class PetViewModel: ObservableObject
         stats.set(\.cleanliness, to: 100)
         stats.set(\.happiness, to: stats.happiness + 5)
         stats.set(\.health, to: stats.health + 40)
-        addXP(5)
+        addMagicXP(5)
         save()
     }
     //sleep
@@ -74,7 +74,7 @@ final class PetViewModel: ObservableObject
             }
             
             stats.set(\.health, to: stats.health + 5)
-            addXP(3)
+            addMagicXP(3)
             save()
             
         }
@@ -115,7 +115,7 @@ final class PetViewModel: ObservableObject
         stats.set(\.happiness, to: stats.happiness + 10)
         stats.set(\.social, to: stats.social + 10)
         stats.set(\.health, to: stats.health + 2)
-        addXP(2)
+        addMagicXP(2)
         save()
     }
     
@@ -170,23 +170,23 @@ final class PetViewModel: ObservableObject
     
     // MARK: - Progression
 
-    private func addXP(_ amount: Int)
+    private func addMagicXP(_ amount: Int)
     {
         guard let pet else { return }
-        pet.xp += amount
+        pet.magicXP += amount
         pet.lastInteractedAt = .now
-        checkLevelUp()
+        checkMagicLevelUp()
     }
 
-    private func checkLevelUp()
+    private func checkMagicLevelUp()
     {
         guard let pet else { return }
-        let xpNeeded = pet.level * 100
-        if pet.xp >= xpNeeded
+        let xpNeeded = pet.magicLevel * 100
+        if pet.magicXP >= xpNeeded
         {
-            pet.xp -= xpNeeded
-            pet.level += 1
-            stats?.set(\.magic, to: (stats?.magic ?? 0) + 5)
+            pet.magicXP -= xpNeeded
+            pet.magicLevel += 1
+            stats?.magicalMoodExpiry = Date().addingTimeInterval(3600)
         }
     }
     
