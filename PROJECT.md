@@ -1,11 +1,11 @@
 # Morbchi Project Document
-A macOS desktop pet companion app. Tamagotchi on steroids with cozy gothic whimsical vibes.
+A macOS desktop pet companion app.
 
 ---
 
 ## Concept
 
-**Morbchi** is a magical creature that lives on your Mac desktop. It floats freely on your screen in a transparent, frameless window always present but never in the way. Inspired by classic desktop pets and Tamagotchi-style care mechanics, it blends stat management, branching evolution, AI-powered conversation, mini-games, and deep macOS integration. The pet watches what you're doing and reacts: chatty when you're idle, quiet when you're working, cozy when it's raining outside.
+**Morbchi** is a magical creature that lives on your Mac desktop. It floats freely on your screen in a transparent, frameless window always present but never in the way. Inspired by classic desktop pets, it blends stat management, AI-powered conversation, mini-games, and deep macOS integration. The pet watches what you're doing and reacts: chatty when you're idle, quiet when you're working, cozy when it's raining outside.
 
 The aesthetic is **cozy gothic whimsical** warm candlelight in a witch's cottage, soft bats, moon motifs, pressed flowers, dark academia warmth.
 
@@ -29,7 +29,7 @@ The aesthetic is **cozy gothic whimsical** warm candlelight in a witch's cottage
 | Audio | AVFoundation |
 | Notifications | UserNotifications (macOS) |
 | Weather | WeatherKit |
-| AI Conversation | Claude API (Anthropic) |
+| AI Conversation  |
 | Activity detection | NSWorkspace + CGEventTap |
 | Version Control | Git + GitHub |
 | Minimum macOS | macOS 14 (Sonoma) |
@@ -67,7 +67,7 @@ The aesthetic is **cozy gothic whimsical** warm candlelight in a witch's cottage
 - Flavor text: italic, slightly whimsical
 
 ### Animation Style
-- Soft, bouncy, hand-drawn/ pixel feel
+- Soft, bouncy, polished
 - Idle: breathing, blinking, tail swishing, occasional yawn or stretch
 - Reactions: heart pops, sparkles, sleepy z's, small rage puffs, glowing aura
 - Transitions: fade + gentle float
@@ -130,22 +130,6 @@ A separate, openable window showing your pet's cozy gothic room — the care & m
 
 ## Pet System
 
-### Life Stages (7 stages, branching)
-```
-Egg
- └─ Sprout (baby)
-     ├─ Wisp (neutral)
-     ├─ Briar (nature path)
-     └─ Shade (shadow path)
-         ├─ Familiar (teen — base form)
-         ├─ Warden (protector)
-         └─ Specter (ethereal)
-             ├─ Elder Familiar
-             ├─ Archmage
-             └─ Ascended (max rarity)
-```
-Evolution influenced by: care habits, mini-games played, time-of-day patterns, what you feed it.
-
 ### Stats (8 core stats)
 | Stat | Icon | Description |
 |---|---|---|
@@ -159,7 +143,7 @@ Evolution influenced by: care habits, mini-games played, time-of-day patterns, w
 | Knowledge | 📖 | Grows from puzzles, reading, mini-games |
 
 ### Moods (12 states)
-Happy, Excited, Sleepy, Hungry, Sad, Sick, Playful, Curious, Grumpy, Lonely, Magical, Ascended
+Happy, Excited, Sleepy, Hungry, Sad, Sick, Playful, Curious, Grumpy, Lonely, Magical
 
 Each mood changes idle animation, desktop behavior, dialogue style, and ambient sound.
 
@@ -167,7 +151,7 @@ Each mood changes idle animation, desktop behavior, dialogue style, and ambient 
 - Personality type at creation: *Mischievous*, *Gentle*, *Sage*, *Wild*, or *Dramatic*
 - Conversations adapt to mood + personality + what's happened recently
 - Pet remembers interactions (SwiftData)
-- Claude API for dynamic, in-character responses
+- AI for dynamic, in-character responses
 - Can chat via a small speech bubble on the desktop or a dedicated chat window
 
 ---
@@ -205,11 +189,6 @@ Categories: Food & Potions, Decor & Furniture, Outfits & Accessories, Spell Scro
 
 ### Journal / Diary
 Pet writes a short entry each day (Claude API, based on actual events). Shown in a leather-bound journal UI panel. Illustrated with small vignettes.
-
-### Photo Capture
-- Screenshot your pet on your desktop in a chosen pose
-- Decorative gothic frame overlays
-- Saved to a photo album in-app
 
 ---
 
@@ -267,7 +246,6 @@ Morbchi/
 ├── Models/                        # SwiftData models
 │   ├── Pet.swift
 │   ├── PetStats.swift
-│   ├── EvolutionPath.swift
 │   ├── Item.swift
 │   ├── JournalEntry.swift
 │   └── RoomDecor.swift
@@ -299,7 +277,7 @@ Morbchi/
 │   ├── Journal/
 │   │   └── JournalView.swift
 │   └── Shared/
-│       ├── GothicButton.swift
+│       ├── Button.swift
 │       ├── StatGaugeView.swift
 │       └── Theme.swift
 ├── Services/
@@ -307,7 +285,7 @@ Morbchi/
 │   ├── ActivityMonitor.swift       # NSWorkspace idle/active detection
 │   ├── WeatherService.swift
 │   ├── NotificationService.swift
-│   ├── AIService.swift             # Claude API calls
+│   ├── AIService.swift            
 │   └── CloudSyncService.swift
 ├── Utilities/
 │   └── Extensions.swift
@@ -352,7 +330,6 @@ Morbchi/
 - [ ] iCloud sync (CloudKit)
 - [ ] Seasonal events (Halloween, Thanksgiving, Christmas, New Year's, Valentine's Day, Easter, 4th of July)
 - [ ] Full audio design
-- [ ] Photo capture + album
 - [ ] App Store / Notarization
 
 ---
@@ -381,8 +358,7 @@ Morbchi/
 - [Cozy Grove](https://cozygrovegame.com/) Daily ritual loop, journal mechanic
 - [Stardew Valley](https://www.stardewvalley.net/) progression pacing, shop/crafting feel
 - [Shimeji Browser Extension](https://shimejis.xyz/) Pet behavior model
-- [Tamagotchi Smart](https://tamagotchi-official.com/gb/) Modern hardware integration
 
 ---
 
-*Last updated: 2026-05-13*
+*Last updated: 2026-11-14*
